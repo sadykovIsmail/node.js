@@ -1,5 +1,5 @@
 {
-  "name": "views",
+  "name": "04-express-ejs-app",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
