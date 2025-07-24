@@ -1,1 +1,17 @@
-<html><body><%= message %></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My EJS App</title>
+</head>
+<body>
+<%- include("navbar") %>
+
+  <h1><%= message %></h1>
+
+  <ul>
+    <% users.forEach(user => { %>
+      <li><%= user %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
