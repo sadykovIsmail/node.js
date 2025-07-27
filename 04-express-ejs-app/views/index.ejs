@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>My EJS App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-<%- include("navbar") %>
+    <h1>Hello</h1>
+    <p>Here is the message: <%= message %></p>
+    <ul>
+        <% users.forEach(user => { %>
+            <li><%= user %></li>
 
-  <h1><%= message %></h1>
-
-  <ul>
-    <% users.forEach(user => { %>
-      <li><%= user %></li>
-    <% }) %>
-  </ul>
+        <% }) 
+        %>
+    </ul>
 </body>
 </html>

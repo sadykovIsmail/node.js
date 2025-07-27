@@ -1,19 +1,18 @@
-const express = require("express");
-const path = require("path");
-const app = express();
+const express = require("express")
+const path = require("node:path")
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+const app = express()
 
-app.use(express.static(path.join(__dirname, "public")));
 
-const links = [{ href: "/", text: "Home" }, { href: "/about", text: "About" }];
-const users = ["Rose", "Cake", "Biff"];
+app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, "views"))
 
 app.get("/", (req, res) => {
-  res.render("index", { message: "Welcome to EJS!", links, users });
-});
+    res.render("index", { 
+        message: "Hello from EJS",
+        users: ["Alice", "Bob", "Charlie"]
+        })
+})
 
-app.listen(3000, () => {
-  console.log("Server is running at http://localhost:3000");
-});
+
+app.listen(3001)
