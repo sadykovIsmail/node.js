@@ -25,3 +25,5 @@ res.render("index", {title: "Mini Messageboard", messages: messages})
 
 })
 
+app.listen(3000)
+
