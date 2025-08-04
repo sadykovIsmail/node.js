@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+</head>
+<body>
+  <h1><%= title %></h1>
+  
+  <div>
+    <p><strong>User:</strong> <%= message.user %></p>
+    <p><strong>Message:</strong> <%= message.text %></p>
+    <p><em><%= message.added.toLocaleString() %></em></p>
+  </div>
+
+  <br>
+  <a href="/">← Back to all messages</a>
+</body>
+</html>

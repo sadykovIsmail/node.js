@@ -7,13 +7,17 @@
 </head>
 <body>
     <h1><%= title %></h1>
-    <% messages.forEach(message => { %>
-  <div style="border: 1px solid #ccc; margin-bottom: 1em;">
-    <p><strong>User:</strong> <%= message.user %></p>
-    <p><strong>Message:</strong> <%= message.text %></p>
-    <p><em><%= message.added.toLocaleString() %></em></p>
-  </div>
+   <% messages.forEach((message, index) => { %>  <!-- ✅ use (message, index) -->
+  <a href="/message/<%= index %>" style="text-decoration: none; color: inherit;">
+    <div style="border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; border-radius: 8px; cursor: pointer; transition: 0.2s;">
+      <p><strong>User:</strong> <%= message.user %></p>
+      <p><strong>Message:</strong> <%= message.text %></p>
+      <p><em><%= message.added.toLocaleString() %></em></p>
+    </div>
+  </a>
 <% }) %>
+
+<a href="/new">Add a new message</a>
 
 </body>
 </html>
