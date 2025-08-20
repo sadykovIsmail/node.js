@@ -1,4 +1,8 @@
 // controllers/usersController.js
+// Example data (demo)
+
+
+
 const usersStorage = require("../storages/usersStorage");
 
 exports.usersListGet = (req, res) => {
@@ -53,13 +57,23 @@ exports.usersCreatePost = [
   }
 ];
 
+// controllers/usersController.js
 exports.usersUpdateGet = (req, res) => {
-  const user = usersStorage.getUser(req.params.id);
+  const userId = req.params.id;
+
+  // Example: get the user from DB or memory
+  const user = users.find(u => u.id === parseInt(userId));
+
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
   res.render("updateUser", {
-    title: "Update user",
-    user: user,
+    title: "Update User",
+    user: user   // <-- THIS is what fixes your error
   });
 };
+
 
 exports.usersUpdatePost = [
   validateUser,
