@@ -1,12 +1,9 @@
-const express = require("express")
-const router = express.Router()
-const userController = require("../controllers/userController")
-const { use } = require("react")
+const express = require("express");
+const router = express.Router();
+const controller = require("../controllers/usersController");
 
-router.get("/", userController.getUsernames)
+router.get("/", controller.getUsernames);
+router.get("/new", controller.createUsernameGet);
+router.post("/new", controller.createUsernamePost);
 
-router.get("/new", userController.createUsernameGet)
-
-router.post("/new", userController.createUsernamePost)
-
-module.exports = router
+module.exports = router;
