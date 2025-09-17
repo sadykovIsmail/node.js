@@ -6,5 +6,4 @@ module.exports = new Pool({
   database: "top_users",
   password: "Ismail2006.,", // replace with your password
   port: 5432
-});
-
+})
