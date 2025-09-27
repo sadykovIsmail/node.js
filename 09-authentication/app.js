@@ -8,8 +8,13 @@ const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 
 const pool = new Pool({
-  // add your configuration
+  host: "localhost",
+  user: "postgres",           // your Postgres username
+  database: "top_users",      // the name of your database
+  password: "Ismail2006.,",   // your Postgres password
+  port: 5432
 });
+
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -22,6 +27,21 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => res.render("index"));
 
 app.get("/sign-up", (req, res) => res.render("sign-up-form"));
+
+app.post("/sign-up", async (req, res, next) => {
+  try {
+    await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
+      req.body.username,
+      req.body.password,
+    ]);
+    res.redirect("/");
+  } catch(err) {
+    return next(err);
+  }
+});
+
+
+
 
 
 app.listen(3000, (error) => {
