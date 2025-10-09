@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+</head>
+<body>
+  <h1>Join the Clubhouse</h1>
+
+  <% if (errors.length > 0) { %>
+    <ul style="color:red;">
+      <% errors.forEach(e => { %><li><%= e.msg %></li><% }) %>
+    </ul>
+  <% } %>
+
+  <form action="/auth/signup" method="POST">
+    <input type="text" name="firstName" placeholder="First Name" value="<%= oldInput.firstName || '' %>" required>
+    <input type="text" name="lastName" placeholder="Last Name" value="<%= oldInput.lastName || '' %>" required>
+    <input type="email" name="email" placeholder="Email" value="<%= oldInput.email || '' %>" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+    <button type="submit">Sign Up</button>
+  </form>
+</body>
+</html>
