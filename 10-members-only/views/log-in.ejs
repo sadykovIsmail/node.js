@@ -1,0 +1,19 @@
+<%- include("partials/header") %>
+
+<h1>Log In</h1>
+<% if (error && error.length > 0) { %>
+  <p style="color:red"><%= error[0] %></p>
+<% } %>
+
+<form action="/log-in" method="POST">
+  <label for="username">Email:</label>
+  <input type="text" name="username" required>
+  <br>
+  <label for="password">Password:</label>
+  <input type="password" name="password" required>
+  <br>
+  <button type="submit">Log In</button>
+</form>
+<p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
+
+<%- include("partials/footer") %>
