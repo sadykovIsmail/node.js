@@ -4,8 +4,10 @@ const session = require('express-session')
 const passport = require('passport')
 const path = require('path')
 const authRoutes = require("./routes/auth");
-
+const { isLoggedIn, isMember } = require("./middleware/auth");
 const app = express()
+const { checkAuthenticated } = require("./middleware/auth");
+
 
 
 app.set('views', path.join(__dirname, 'views')); // Make sure this folder exists
@@ -77,7 +79,6 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-const { checkAuthenticated } = require("./middleware/auth");
 
 // Login page
 app.get("/log-in", (req, res) => res.render("log-in"));
@@ -86,11 +87,15 @@ app.get("/log-in", (req, res) => res.render("log-in"));
 app.post(
   "/log-in",
   passport.authenticate("local", {
-    successRedirect: "/members", // now goes to members page
-    failureRedirect: "/log-in",   // failed login goes back to login
+    failureRedirect: "/log-in",
     failureFlash: true
-  })
+  }),
+  (req, res) => {
+    // After login, redirect to dashboard
+    res.redirect("/dashboard");
+  }
 );
+
 
 
 // Logout
@@ -101,15 +106,35 @@ app.get("/log-out", (req, res, next) => {
   });
 });
 
+// Example: make a user a member (could be admin only)
+app.post("/become-member", isLoggedIn, async (req, res) => {
+  try {
+    await pool.query(
+      "UPDATE members SET membership_status = TRUE WHERE member_id = $1",
+      [req.user.member_id]
+    );
+    req.user.membership_status = true; // update session
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error upgrading membership");
+  }
+});
+
 
 
 
 
 // Members page (protected)
-app.get("/members", checkAuthenticated, (req, res) => {
+app.get("/members", isMember, (req, res) => {
   res.render("members", { user: req.user });
 });
 
+
+
+app.get("/dashboard", isLoggedIn, (req, res) => {
+  res.render("dashboard", { user: req.user });
+});
 
 
 //routes

@@ -7,7 +7,8 @@ function isLoggedIn(req, res, next) {
 // Check if user is a member
 function isMember(req, res, next) {
   if (req.isAuthenticated() && req.user.membership_status) return next();
-  res.status(403).send("You are not a member. Access denied.");
+  res.status(403).send("Access denied. Members only.");
 }
 
 module.exports = { isLoggedIn, isMember };
+

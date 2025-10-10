@@ -1,0 +1,17 @@
+<%- include("partials/header") %>
+
+<h1>Welcome, <%= user.username %>!</h1>
+
+<% if (user.membership_status) { %>
+  <p>You are now a members-only user.</p>
+  <a href="/members">Go to Members Page</a>
+<% } else { %>
+  <p>You are a regular user.</p>
+  <form action="/become-member" method="POST">
+    <button type="submit">Become a Member</button>
+  </form>
+<% } %>
+
+<a href="/log-out">Logout</a>
+
+<%- include("partials/footer") %>
