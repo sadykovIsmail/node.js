@@ -10,7 +10,7 @@ const app = express()
 
 app.set('views', path.join(__dirname, 'views')); // Make sure this folder exists
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')))
 
 
@@ -77,7 +77,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-const { ensureAuthenticated } = require("./middlewares/authMiddleware");
+const { checkAuthenticated } = require("./middleware/auth");
 
 // Login page
 app.get("/log-in", (req, res) => res.render("log-in"));
@@ -86,11 +86,12 @@ app.get("/log-in", (req, res) => res.render("log-in"));
 app.post(
   "/log-in",
   passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/log-in",
+    successRedirect: "/members", // now goes to members page
+    failureRedirect: "/log-in",   // failed login goes back to login
     failureFlash: true
   })
 );
+
 
 // Logout
 app.get("/log-out", (req, res, next) => {
@@ -101,8 +102,12 @@ app.get("/log-out", (req, res, next) => {
 });
 
 
-app.get("/dashboard", ensureAuthenticated, (req, res) => {
-  res.render("dashboard"); // Only accessible if logged in
+
+
+
+// Members page (protected)
+app.get("/members", checkAuthenticated, (req, res) => {
+  res.render("members", { user: req.user });
 });
 
 
