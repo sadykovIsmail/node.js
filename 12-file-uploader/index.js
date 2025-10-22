@@ -15,13 +15,16 @@ app.use(bodyParser.json());
 
 // home
 app.get("/", (req, res) => {
-  res.send("Server is working!");
+res.render("login")
 });
 
 // show signup form
 app.get("/signup", (req, res) => {
   res.render("signup");
 });
+app.get("/login", (req, res) => res.render("login"));
+
+
 
 // handle signup
 app.post("/signup", async (req, res) => {
