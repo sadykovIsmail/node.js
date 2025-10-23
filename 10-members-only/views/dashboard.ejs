@@ -12,8 +12,6 @@
 
     <!-- Request Membership Code Form -->
     <form action="/request-membership" method="POST" class="membership-form">
-      <label for="email">Your Email:</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required>
       <button type="submit">Request Membership Code</button>
     </form>
 
@@ -22,6 +20,7 @@
       <form action="/become-member" method="POST" class="membership-form">
         <label for="code">Enter Membership Code:</label>
         <input type="text" id="code" name="code" placeholder="Enter code" required>
+        <!-- Hidden email field ensures server knows which code to verify -->
         <input type="hidden" name="email" value="<%= user.email_address %>">
         <button type="submit">Submit Code</button>
       </form>
@@ -37,4 +36,3 @@
 </div>
 
 <%- include("partials/footer") %>
-

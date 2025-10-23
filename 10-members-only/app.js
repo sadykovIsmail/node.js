@@ -17,10 +17,11 @@ const app = express();
 // Temporary storage for membership codes
 let membershipCodes = {};
 
-// Nodemailer transporter (Mailtrap)
+// Nodemailer transporter (supports Gmail or SMTP)
 const transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: process.env.EMAIL_HOST,
+  port: parseInt(process.env.EMAIL_PORT),
+  secure: parseInt(process.env.EMAIL_PORT) === 465, // true for 465, false otherwise
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -120,7 +121,7 @@ app.get("/dashboard", isLoggedIn, (req, res) => {
 // Send membership email
 async function sendMembershipEmail(toEmail, code) {
   const message = {
-    from: `"My App" <${process.env.EMAIL_USER}>`,
+    from: `"Membership App" <${process.env.EMAIL_USER}>`,
     to: toEmail,
     subject: "Your Membership Code",
     text: `Your membership code is: ${code}`,
@@ -138,7 +139,15 @@ async function sendMembershipEmail(toEmail, code) {
 
 // Request membership code
 app.post("/request-membership", isLoggedIn, async (req, res) => {
-  const email = req.body.email;
+  const email = req.user.email_address?.trim();
+  if (!email) {
+    return res.render("dashboard", {
+      user: req.user,
+      message: "No email found for your account.",
+      showCodeForm: true
+    });
+  }
+
   const code = Math.floor(100000 + Math.random() * 900000); // 6-digit code
   membershipCodes[email] = code;
 
@@ -160,15 +169,26 @@ app.post("/request-membership", isLoggedIn, async (req, res) => {
 
 // Become member (verify code)
 app.post("/become-member", isLoggedIn, async (req, res) => {
-  const { email, code } = req.body;
+  const email = req.body.email?.trim();
+  const code = req.body.code?.trim();
+
+  if (!email || !code) {
+    return res.render("dashboard", { 
+      user: req.user, 
+      message: "Please enter the code.", 
+      showCodeForm: true 
+    });
+  }
+
   if (membershipCodes[email] && parseInt(code) === membershipCodes[email]) {
     try {
       await pool.query(
         "UPDATE members SET membership_status = true WHERE email_address = $1",
         [email]
       );
-      req.user.membership_status = true; // update session
-      delete membershipCodes[email]; // remove used code
+      req.user.membership_status = true;
+      delete membershipCodes[email];
+
       res.render("dashboard", {
         user: req.user,
         message: "You are now a member!",
@@ -207,7 +227,6 @@ app.get("/members", isMember, async (req, res) => {
     `);
     res.render("members", { user: req.user, posts: result.rows });
   } catch (err) {
-    console.error(err);
     res.render("members", { user: req.user, posts: [] });
   }
 });
@@ -224,12 +243,11 @@ app.post("/members", isMember, async (req, res) => {
     );
     res.redirect("/members");
   } catch (err) {
-    console.error(err);
     res.redirect("/members");
   }
 });
 
-// Use separate route files
+// Routes
 app.use("/", authRoutes);
 app.use("/members", memberRoutes);
 
