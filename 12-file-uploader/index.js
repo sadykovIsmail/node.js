@@ -28,15 +28,15 @@ app.get("/login", (req, res) => res.render("login"));
 
 // handle signup
 app.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     // create user in database
     const newUser = await prisma.user.create({
-      data: { email, password },
+      data: { name, email, password },
     });
 
-    res.send(`User ${newUser.email} created successfully!`);
+    res.send(`User ${newUser.name} created successfully!`);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error creating user.");

@@ -6,8 +6,12 @@
   <title>Sign Up</title>
 </head>
 <body>
+  <%- include("partials/header") %>
+
   <h1>Sign Up</h1>
   <form action="/signup" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" required>
     <label>Email:</label>
     <input type="email" name="email" required />
     <br><br>
