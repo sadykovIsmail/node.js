@@ -1,18 +1,19 @@
-/* ---------- Base ---------- */
+/* ---------- Reset & Base ---------- */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   background: #f2f4f8;
   color: #222;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
+  padding: 20px;
 }
 
 a {
@@ -27,16 +28,15 @@ a:hover {
 /* ---------- Container ---------- */
 .container {
   background: #fff;
-  width: 90%;
-  max-width: 420px;
+  width: 100%;
+  max-width: 450px;
   margin: 40px auto;
-  padding: 35px 40px;
+  padding: 35px 30px;
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
 }
 
-/* ---------- Headers ---------- */
-h1, h2 {
+h1, h2, h3 {
   color: #222;
   margin-bottom: 15px;
   text-align: center;
@@ -45,11 +45,17 @@ h1, h2 {
 .subtitle {
   text-align: center;
   color: #666;
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 25px;
 }
 
-/* ---------- Form ---------- */
+.error {
+  color: #e84118;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* ---------- Forms ---------- */
 form {
   display: flex;
   flex-direction: column;
@@ -59,11 +65,11 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 textarea {
+  padding: 12px 10px;
   margin-bottom: 15px;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  font-size: 15px;
   border-radius: 8px;
+  border: 1px solid #ccc;
   outline: none;
   transition: border 0.2s;
 }
@@ -75,11 +81,12 @@ textarea:focus {
 
 button {
   padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
   background: #0078ff;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -88,19 +95,23 @@ button:hover {
   background: #005fcc;
 }
 
-/* ---------- Flash / messages ---------- */
-.flash {
-  background: #e1f5fe;
-  color: #0277bd;
-  padding: 10px;
-  border-radius: 6px;
+.btn {
+  display: inline-block;
   text-align: center;
-  margin-bottom: 15px;
+  padding: 10px 15px;
+  background: #0078ff;
+  color: #fff;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-decoration: none;
 }
 
-/* ---------- Dashboard / Members ---------- */
-.dashboard,
-.members {
+.btn:hover {
+  background: #005fcc;
+}
+
+/* ---------- Dashboard & Members ---------- */
+.dashboard, .members {
   text-align: center;
 }
 
@@ -118,15 +129,60 @@ button:hover {
   text-align: left;
 }
 
+.post-item h3 {
+  margin-bottom: 5px;
+  color: #273c75;
+}
+
+.post-item p {
+  margin-bottom: 10px;
+}
+
 .post-item small {
   color: #888;
   display: block;
-  margin-top: 10px;
 }
 
+/* ---------- New Post Section ---------- */
+.new-post {
+  margin-top: 25px;
+}
+
+.new-post input,
+.new-post textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.no-posts {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+}
+
+/* ---------- Logout Link ---------- */
 .logout {
   display: inline-block;
   margin-top: 20px;
   color: #e84118;
   font-weight: bold;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 500px) {
+  .container {
+    padding: 25px 20px;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.2rem;
+  }
+
+  input, textarea, button {
+    font-size: 14px;
+  }
 }
