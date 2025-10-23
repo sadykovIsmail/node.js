@@ -14,8 +14,9 @@
             <h3><%= post.post_title %></h3>
             <p><%= post.post_body %></p>
             <small>
-              Posted by <%= post.first_name ? post.first_name : "Unknown" %>
-              <%= post.last_name ? post.last_name : "" %> 
+              Posted by 
+              <%= post.first_name ? post.first_name : "Unknown" %>
+              <%= post.last_name ? post.last_name : "" %>
               on <%= new Date(post.posted_at).toLocaleString() %>
             </small>
           </li>
@@ -37,3 +38,5 @@
 
   <a class="logout" href="/log-out">Logout</a>
 </div>
+
+<%- include("partials/footer") %>
