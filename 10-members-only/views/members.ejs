@@ -3,4 +3,21 @@
 <h1>Welcome, <%= user.first_name %>!</h1>
 <p>You are now a members-only user.</p>
 
+<h2>Club Posts</h2>
+
+<ul>
+  <% if (posts.length > 0) { %>
+    <% posts.forEach(post => { %>
+      <li>
+        <strong><%= post.post_title %></strong><br>
+        <%= post.post_body %><br>
+        <small>Posted at <%= new Date(post.posted_at).toLocaleString() %></small>
+      </li>
+    <% }) %>
+  <% } else { %>
+    <li>No posts yet.</li>
+  <% } %>
+</ul>
+
+
 <a href="/log-out">Logout</a>

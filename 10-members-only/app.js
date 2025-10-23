@@ -7,7 +7,7 @@ const authRoutes = require("./routes/auth");
 const { isLoggedIn, isMember } = require("./middleware/auth");
 const app = express()
 const { checkAuthenticated } = require("./middleware/auth");
-
+const memberRoutes = require("./routes/members");
 
 
 app.set('views', path.join(__dirname, 'views')); // Make sure this folder exists
@@ -126,9 +126,23 @@ app.post("/become-member", isLoggedIn, async (req, res) => {
 
 
 // Members page (protected)
-app.get("/members", isMember, (req, res) => {
-  res.render("members", { user: req.user });
+app.get("/members", isMember, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM club_posts ORDER BY posted_at DESC"
+    );
+    const posts = result.rows; // get all posts
+
+    // Pass both user and posts to the template
+    res.render("members", { user: req.user, posts });
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    // If something goes wrong, pass an empty array so template doesn't break
+    res.render("members", { user: req.user, posts: [] });
+  }
 });
+
+
 
 
 
@@ -141,6 +155,8 @@ app.get("/dashboard", isLoggedIn, (req, res) => {
 
 app.use("/", authRoutes);
 app.get('/', (req, res) => res.render('index'))
+ 
+app.use("/members", memberRoutes);
 
 
 app.listen(3000, () => console.log('Server running on https://localhost:3000'))
