@@ -186,3 +186,28 @@ button:hover {
     font-size: 14px;
   }
 }
+
+/* ---------- Navbar ---------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.navbar a {
+  margin-left: 15px;
+  color: #0078ff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #005fcc;
+}
+
+.nav-left a {
+  margin-left: 0;
+}
+
