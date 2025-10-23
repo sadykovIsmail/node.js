@@ -122,25 +122,54 @@ app.post("/become-member", isLoggedIn, async (req, res) => {
 });
 
 
+// Handle new post submission
+app.post("/members", isMember, async (req, res) => {
+  const { post_title, post_body } = req.body;
+
+  if (!post_title || !post_body) {
+    return res.redirect("/members");
+  }
+
+  try {
+    await pool.query(
+      "INSERT INTO club_posts (author_id, post_title, post_body) VALUES ($1, $2, $3)",
+      [req.user.member_id, post_title, post_body]
+    );
+    res.redirect("/members"); // reload page to show new post
+  } catch (err) {
+    console.error("Error inserting post:", err);
+    res.redirect("/members");
+  }
+});
 
 
 
 // Members page (protected)
 app.get("/members", isMember, async (req, res) => {
   try {
-    const result = await pool.query(
-      "SELECT * FROM club_posts ORDER BY posted_at DESC"
-    );
-    const posts = result.rows; // get all posts
+    const result = await pool.query(`
+      SELECT cp.post_id,
+             cp.post_title,
+             cp.post_body,
+             cp.posted_at,
+             m.first_name,
+             m.last_name
+      FROM club_posts cp
+      JOIN members m ON cp.author_id = m.member_id
+      ORDER BY cp.posted_at DESC
+    `);
 
-    // Pass both user and posts to the template
+    const posts = result.rows;
     res.render("members", { user: req.user, posts });
   } catch (err) {
     console.error("Error fetching posts:", err);
-    // If something goes wrong, pass an empty array so template doesn't break
     res.render("members", { user: req.user, posts: [] });
   }
 });
+
+
+
+
 
 
 
