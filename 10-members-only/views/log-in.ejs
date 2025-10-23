@@ -1,22 +1,23 @@
 <%- include("partials/header") %>
 
-<h1>Log In</h1>
-<% if (error && error.length > 0) { %>
-  <p style="color:red"><%= error[0] %></p>
-<% } %>
+<div class="container">
+  <h1>Log In</h1>
 
-<form action="/log-in" method="POST">
-  <label>Email:</label>
-  <input type="email" name="email" required>
+  <% if (error && error.length > 0) { %>
+    <p class="error"><%= error[0] %></p>
+  <% } %>
 
-  <label>Password:</label>
-  <input type="password" name="password" required>
+  <form action="/log-in" method="POST">
+    <label>Email:</label>
+    <input type="email" name="email" required>
 
-  <button type="submit">Log In</button>
-</form>
+    <label>Password:</label>
+    <input type="password" name="password" required>
 
+    <button type="submit">Log In</button>
+  </form>
 
-<p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
+  <p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
+</div>
 
 <%- include("partials/footer") %>
-
