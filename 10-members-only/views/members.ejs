@@ -1,52 +1,39 @@
 <%- include("partials/header") %>
 
-<h1>Welcome, <%= user.first_name %>!</h1>
-<p>You are now a members-only user.</p>
+<div class="container">
+  <h1>Welcome, <%= user.first_name %>!</h1>
+  <p class="subtitle">You are now a members-only user.</p>
 
-<!-- Create New Post Form -->
-<h2>Create a New Post</h2>
-<form action="/members" method="POST" style="margin-bottom: 2rem;">
-  <input 
-    type="text" 
-    name="post_title" 
-    placeholder="Post title" 
-    required 
-    style="width: 50%; padding: 0.5rem;" 
-  />
-  <br><br>
-  <textarea 
-    name="post_body" 
-    rows="4" 
-    cols="60" 
-    placeholder="Write your post..." 
-    required
-  ></textarea>
-  <br>
-  <button type="submit">Publish</button>
-</form>
+  <section class="post-section">
+    <h2>Club Posts</h2>
 
-<!-- Display All Posts -->
-<h2>Club Posts</h2>
-<ul>
-  <% if (posts && posts.length > 0) { %>
-    <% posts.forEach(post => { %>
-      <li style="margin-bottom: 1.5rem;">
-        <h3><%= post.post_title %></h3>
-        <p><%= post.post_body %></p>
-        <small>
-          Posted by <%= post.first_name %> <%= post.last_name %> 
-          at <%= new Date(post.posted_at).toLocaleString() %>
-        </small>
-      </li>
-    <% }) %>
-  <% } else { %>
-    <li>No posts yet. Be the first to post!</li>
-  <% } %>
-</ul>
+    <% if (posts.length > 0) { %>
+      <ul class="post-list">
+        <% posts.forEach(post => { %>
+          <li class="post-item">
+            <h3><%= post.post_title %></h3>
+            <p><%= post.post_body %></p>
+            <small>
+              Posted by <%= post.first_name ? post.first_name : "Unknown" %>
+              <%= post.last_name ? post.last_name : "" %> 
+              on <%= new Date(post.posted_at).toLocaleString() %>
+            </small>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p class="no-posts">No posts yet. Be the first to write one!</p>
+    <% } %>
+  </section>
 
+  <section class="new-post">
+    <h3>Create a New Post</h3>
+    <form action="/create-post" method="POST">
+      <input type="text" name="post_title" placeholder="Title" required>
+      <textarea name="post_body" placeholder="Write your post..." required></textarea>
+      <button type="submit">Post</button>
+    </form>
+  </section>
 
-
-
-
-<!-- Logout -->
-<a href="/log-out">Logout</a>
+  <a class="logout" href="/log-out">Logout</a>
+</div>
