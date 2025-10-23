@@ -1,52 +1,58 @@
-require('dotenv').config()
-const express = require('express')
-const session = require('express-session')
-const passport = require('passport')
-const path = require('path')
-const authRoutes = require("./routes/auth");
+require('dotenv').config();
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const path = require('path');
+const nodemailer = require("nodemailer");
 const { isLoggedIn, isMember } = require("./middleware/auth");
-const app = express()
-const { checkAuthenticated } = require("./middleware/auth");
+const authRoutes = require("./routes/auth");
 const memberRoutes = require("./routes/members");
-
-
-app.set('views', path.join(__dirname, 'views')); // Make sure this folder exists
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')))
-
-
-app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
-app.use(passport.initialize())
-app.use(passport.session())
-
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const flash = require("connect-flash");
-const pool = require("./db"); // Your PostgreSQL pool
+const pool = require("./db"); // PostgreSQL pool
 
-// Express middleware
+const app = express();
+
+// Temporary storage for membership codes
+let membershipCodes = {};
+
+// Nodemailer transporter (Mailtrap)
+const transport = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Views & static
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Session middleware
+// Sessions
 app.use(session({
-  secret: "secret-key", 
-  resave: false, 
+  secret: process.env.SECRET,
+  resave: false,
   saveUninitialized: false
 }));
 
-// Passport initialization
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// Make current user available in all views
+// Make current user and flash messages available in all views
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   next();
 });
 
+// Passport local strategy
 passport.use(
   new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
     try {
@@ -55,7 +61,6 @@ passport.use(
         [email]
       );
       const user = rows[0];
-
       if (!user) return done(null, false, { message: "Incorrect email" });
 
       const match = await bcrypt.compare(password, user.password_hash);
@@ -78,25 +83,21 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// ================= ROUTES =================
 
+// Home
+app.get('/', (req, res) => res.render('index'));
 
-// Login page
+// Login
 app.get("/log-in", (req, res) => res.render("log-in"));
-
-// Login POST
 app.post(
   "/log-in",
   passport.authenticate("local", {
     failureRedirect: "/log-in",
     failureFlash: true
   }),
-  (req, res) => {
-    // After login, redirect to dashboard
-    res.redirect("/dashboard");
-  }
+  (req, res) => res.redirect("/dashboard")
 );
-
-
 
 // Logout
 app.get("/log-out", (req, res, next) => {
@@ -106,45 +107,91 @@ app.get("/log-out", (req, res, next) => {
   });
 });
 
-// Example: make a user a member (could be admin only)
+// Dashboard
+app.get("/dashboard", isLoggedIn, (req, res) => {
+  const showCodeForm = !req.user.membership_status;
+  res.render("dashboard", {
+    user: req.user,
+    message: "",
+    showCodeForm
+  });
+});
+
+// Send membership email
+async function sendMembershipEmail(toEmail, code) {
+  const message = {
+    from: `"My App" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: "Your Membership Code",
+    text: `Your membership code is: ${code}`,
+    html: `<p>Your membership code is: <b>${code}</b></p>`
+  };
+
+  try {
+    const info = await transport.sendMail(message);
+    console.log("Email sent: %s", info.messageId);
+  } catch (err) {
+    console.error("Error sending email:", err);
+    throw err;
+  }
+}
+
+// Request membership code
+app.post("/request-membership", isLoggedIn, async (req, res) => {
+  const email = req.body.email;
+  const code = Math.floor(100000 + Math.random() * 900000); // 6-digit code
+  membershipCodes[email] = code;
+
+  try {
+    await sendMembershipEmail(email, code);
+    res.render("dashboard", { 
+      user: req.user, 
+      message: "Membership code sent to your email!", 
+      showCodeForm: true
+    });
+  } catch (err) {
+    res.render("dashboard", { 
+      user: req.user, 
+      message: "Failed to send code. Try again.", 
+      showCodeForm: true
+    });
+  }
+});
+
+// Become member (verify code)
 app.post("/become-member", isLoggedIn, async (req, res) => {
-  try {
-    await pool.query(
-      "UPDATE members SET membership_status = TRUE WHERE member_id = $1",
-      [req.user.member_id]
-    );
-    req.user.membership_status = true; // update session
-    res.redirect("/dashboard");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error upgrading membership");
+  const { email, code } = req.body;
+  if (membershipCodes[email] && parseInt(code) === membershipCodes[email]) {
+    try {
+      await pool.query(
+        "UPDATE members SET membership_status = true WHERE email_address = $1",
+        [email]
+      );
+      req.user.membership_status = true; // update session
+      delete membershipCodes[email]; // remove used code
+      res.render("dashboard", {
+        user: req.user,
+        message: "You are now a member!",
+        showCodeForm: false
+      });
+    } catch (err) {
+      console.error(err);
+      res.render("dashboard", { 
+        user: req.user, 
+        message: "Failed to update membership. Try again.", 
+        showCodeForm: true 
+      });
+    }
+  } else {
+    res.render("dashboard", { 
+      user: req.user, 
+      message: "Invalid code. Try again.", 
+      showCodeForm: true 
+    });
   }
 });
 
-
-// Handle new post submission
-app.post("/members", isMember, async (req, res) => {
-  const { post_title, post_body } = req.body;
-
-  if (!post_title || !post_body) {
-    return res.redirect("/members");
-  }
-
-  try {
-    await pool.query(
-      "INSERT INTO club_posts (author_id, post_title, post_body) VALUES ($1, $2, $3)",
-      [req.user.member_id, post_title, post_body]
-    );
-    res.redirect("/members"); // reload page to show new post
-  } catch (err) {
-    console.error("Error inserting post:", err);
-    res.redirect("/members");
-  }
-});
-
-
-
-// Members page (protected)
+// Members page
 app.get("/members", isMember, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -158,34 +205,33 @@ app.get("/members", isMember, async (req, res) => {
       JOIN members m ON cp.author_id = m.member_id
       ORDER BY cp.posted_at DESC
     `);
-
-    const posts = result.rows;
-    res.render("members", { user: req.user, posts });
+    res.render("members", { user: req.user, posts: result.rows });
   } catch (err) {
-    console.error("Error fetching posts:", err);
+    console.error(err);
     res.render("members", { user: req.user, posts: [] });
   }
 });
 
+// Submit new post
+app.post("/members", isMember, async (req, res) => {
+  const { post_title, post_body } = req.body;
+  if (!post_title || !post_body) return res.redirect("/members");
 
-
-
-
-
-
-
-
-app.get("/dashboard", isLoggedIn, (req, res) => {
-  res.render("dashboard", { user: req.user });
+  try {
+    await pool.query(
+      "INSERT INTO club_posts (author_id, post_title, post_body) VALUES ($1, $2, $3)",
+      [req.user.member_id, post_title, post_body]
+    );
+    res.redirect("/members");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/members");
+  }
 });
 
-
-//routes
-
+// Use separate route files
 app.use("/", authRoutes);
-app.get('/', (req, res) => res.render('index'))
- 
 app.use("/members", memberRoutes);
 
-
-app.listen(3000, () => console.log('Server running on https://localhost:3000'))
+// Start server
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));

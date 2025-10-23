@@ -1,21 +1,17 @@
-<%- include("partials/header") %>
+<div class="page-wrapper">
+  <%- include("partials/header") %>
 
-<h1>Log In</h1>
-<% if (error && error.length > 0) { %>
-  <p style="color:red"><%= error[0] %></p>
-<% } %>
+  <main class="content">
+    <div class="container home-container">
+      <h1>Welcome to Members Only Club</h1>
+      <p class="subtitle">Sign up to become a member and join our community!</p>
 
-<form action="/log-in" method="POST">
-  <label>Email:</label>
-  <input type="email" name="email" required>
+      <div class="home-buttons">
+        <a href="/sign-up" class="btn">Sign Up</a>
+        <a href="/log-in" class="btn">Log In</a>
+      </div>
+    </div>
+  </main>
 
-  <label>Password:</label>
-  <input type="password" name="password" required>
-
-  <button type="submit">Log In</button>
-</form>
-
-<p>Don't have an account? <a href="/sign-up">Sign Up</a></p>
-
-<%- include("partials/footer") %>
-
+  <%- include("partials/footer") %>
+</div>

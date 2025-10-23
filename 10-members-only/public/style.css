@@ -10,11 +10,12 @@ body {
   background: #f2f4f8;
   color: #222;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+
+  /* Remove flex centering from body */
+  display: block;
   padding: 20px;
 }
+
 
 a {
   color: #0078ff;
@@ -30,11 +31,14 @@ a:hover {
   background: #fff;
   width: 100%;
   max-width: 450px;
-  margin: 40px auto;
   padding: 35px 30px;
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+
+  /* Remove large top/bottom margin */
+  margin: 0;
 }
+
 
 h1, h2, h3 {
   color: #222;
@@ -210,4 +214,124 @@ button:hover {
 .nav-left a {
   margin-left: 0;
 }
+
+
+/* For log in and sign up pages */
+.centered-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* subtract header height */
+}
+
+/* Make body full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Wrapper flex container */
+.page-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content grows to fill space */
+.content {
+  flex: 1;
+}
+
+/* Footer styling */
+footer {
+  background: #f2f4f8;
+  color: #666;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+/* Home page container */
+.home-container {
+  max-width: 500px;
+  margin: 60px auto; /* space from top and bottom */
+  text-align: center;
+  padding: 35px 30px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.08);
+}
+
+/* Subtitle */
+.home-container .subtitle {
+  margin-bottom: 25px;
+  color: #555;
+  font-size: 16px;
+}
+
+/* Home buttons */
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.home-buttons .btn {
+  padding: 12px 25px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.home-buttons .btn:hover {
+  background: #005fcc;
+}
+
+
+.membership-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.membership-form input {
+  padding: 8px 12px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.membership-form button {
+  background: #007bff;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.membership-form button:hover {
+  background: #005fcc;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+.logout {
+  display: inline-block;
+  margin-top: 20px;
+  color: #555;
+  text-decoration: none;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}
+
 

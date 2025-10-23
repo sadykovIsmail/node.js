@@ -1,19 +1,40 @@
 <%- include("partials/header") %>
 
 <div class="container">
-  <h1>Welcome, <%= user.first_name || user.username %>!</h1>
+  <h1>Welcome, <%= user.first_name %>!</h1>
 
   <% if (user.membership_status) { %>
     <p>You are now a members-only user.</p>
     <a href="/members" class="btn">Go to Members Page</a>
+
   <% } else { %>
-    <p>You are a regular user.</p>
-    <form action="/become-member" method="POST">
-      <button type="submit">Become a Member</button>
+    <p>Request a membership to access exclusive posts!</p>
+
+    <!-- Request Membership Code Form -->
+    <form action="/request-membership" method="POST" class="membership-form">
+      <label for="email">Your Email:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Request Membership Code</button>
     </form>
+
+    <% if (showCodeForm) { %>
+      <!-- Enter Membership Code Form -->
+      <form action="/become-member" method="POST" class="membership-form">
+        <label for="code">Enter Membership Code:</label>
+        <input type="text" id="code" name="code" placeholder="Enter code" required>
+        <input type="hidden" name="email" value="<%= user.email_address %>">
+        <button type="submit">Submit Code</button>
+      </form>
+    <% } %>
+  <% } %>
+
+  <!-- Message display -->
+  <% if (message) { %>
+    <p class="success"><%= message %></p>
   <% } %>
 
   <a href="/log-out" class="logout">Logout</a>
 </div>
 
 <%- include("partials/footer") %>
+
