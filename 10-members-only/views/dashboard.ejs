@@ -1,17 +1,19 @@
 <%- include("partials/header") %>
 
-<h1>Welcome, <%= user.username %>!</h1>
+<div class="container">
+  <h1>Welcome, <%= user.first_name || user.username %>!</h1>
 
-<% if (user.membership_status) { %>
-  <p>You are now a members-only user.</p>
-  <a href="/members">Go to Members Page</a>
-<% } else { %>
-  <p>You are a regular user.</p>
-  <form action="/become-member" method="POST">
-    <button type="submit">Become a Member</button>
-  </form>
-<% } %>
+  <% if (user.membership_status) { %>
+    <p>You are now a members-only user.</p>
+    <a href="/members" class="btn">Go to Members Page</a>
+  <% } else { %>
+    <p>You are a regular user.</p>
+    <form action="/become-member" method="POST">
+      <button type="submit">Become a Member</button>
+    </form>
+  <% } %>
 
-<a href="/log-out">Logout</a>
+  <a href="/log-out" class="logout">Logout</a>
+</div>
 
 <%- include("partials/footer") %>
