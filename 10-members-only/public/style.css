@@ -7,18 +7,19 @@
 
 html {
   font-size: 16px; /* base font size */
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
 }
 
 body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   background: #f2f4f8;
   color: #222;
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 15px;
 }
 
 /* ---------- Container ---------- */
@@ -40,15 +41,29 @@ h1, h2, h3 {
   font-weight: 600;
 }
 
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
 .subtitle {
   color: #666;
-  font-size: 16px;
+  font-size: 1rem;
   margin-bottom: 25px;
+  line-height: 1.5;
 }
 
 .error {
   color: #e84118;
   margin-bottom: 15px;
+  font-size: 1rem;
 }
 
 /* ---------- Forms ---------- */
@@ -58,6 +73,7 @@ form,
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  width: 100%;
 }
 
 input[type="text"],
@@ -66,12 +82,14 @@ input[type="password"],
 textarea,
 .membership-form input {
   width: 100%;
-  padding: 14px 12px;
-  font-size: 16px;
+  padding: 16px 14px;
+  font-size: 16px; /* Minimum 16px prevents iOS zoom */
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
 }
 
 input:focus,
@@ -80,10 +98,16 @@ textarea:focus {
   box-shadow: 0 0 6px rgba(0, 120, 255, 0.3);
 }
 
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
 button,
 .membership-form button,
 .btn {
-  padding: 14px 20px;
+  width: 100%;
+  padding: 16px 20px;
   font-size: 16px;
   font-weight: bold;
   background: #0078ff;
@@ -92,6 +116,9 @@ button,
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s, transform 0.1s;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation; /* Improves touch responsiveness */
 }
 
 button:hover,
@@ -99,6 +126,11 @@ button:hover,
 .btn:hover {
   background: #005fcc;
   transform: translateY(-1px);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(0);
 }
 
 /* ---------- Dashboard & Posts ---------- */
@@ -130,23 +162,26 @@ button:hover,
 .post-item p {
   margin-bottom: 10px;
   font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .post-item small {
   color: #888;
   display: block;
+  font-size: 0.85rem;
 }
 
 .new-post input,
 .new-post textarea {
   width: 100%;
-  resize: vertical;
 }
 
 .no-posts {
   text-align: center;
   font-style: italic;
   color: #999;
+  font-size: 1rem;
+  padding: 20px 0;
 }
 
 /* ---------- Logout ---------- */
@@ -155,6 +190,10 @@ button:hover,
   margin-top: 20px;
   color: #e84118;
   font-weight: bold;
+  font-size: 1rem;
+  padding: 10px;
+  min-height: 44px; /* Touch target size */
+  line-height: 24px;
 }
 
 .logout:hover {
@@ -171,16 +210,18 @@ button:hover,
 }
 
 .home-buttons .btn {
-  padding: 14px 25px;
+  padding: 16px 25px;
   font-weight: bold;
   border-radius: 8px;
   transition: background 0.3s;
+  min-width: 140px;
 }
 
 /* ---------- Messages ---------- */
 .success {
   color: green;
   margin-top: 10px;
+  font-size: 1rem;
 }
 
 /* ---------- Footer ---------- */
@@ -188,8 +229,8 @@ footer {
   background: #f2f4f8;
   color: #666;
   text-align: center;
-  padding: 25px 0;
-  font-size: 15px;
+  padding: 25px 15px;
+  font-size: 0.9rem;
   margin-top: auto;
 }
 
@@ -199,42 +240,112 @@ footer {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px);
-  padding: 20px;
+  padding: 20px 10px;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 500px) {
-  html {
-    font-size: 18px; /* scale up font for mobile readability */
+/* ---------- Responsive Mobile ---------- */
+@media (max-width: 600px) {
+  body {
+    padding: 0 10px;
   }
 
   .container,
   .home-container {
-    width: 90%;
-    max-width: 400px;
-    margin: 30px auto;
-    padding: 30px 20px;
+    width: 100%;
+    max-width: 100%;
+    margin: 15px auto;
+    padding: 25px 20px;
+    border-radius: 12px;
   }
 
-  h1, h2, h3 {
-    font-size: 1.5rem;
+  h1 {
+    font-size: 1.6rem;
   }
 
-  input, textarea, button {
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  .membership-form input {
+    padding: 15px 12px;
+    font-size: 16px; /* Keep 16px to prevent zoom */
+  }
+
+  button,
+  .membership-form button,
+  .btn {
+    padding: 15px 18px;
     font-size: 16px;
-    padding: 14px 12px;
   }
 
   .home-buttons {
     flex-direction: column;
+    gap: 12px;
+    width: 100%;
   }
 
   .home-buttons .btn {
     width: 100%;
-    padding: 14px 0;
+    min-width: auto;
+    padding: 15px 20px;
   }
 
-  .membership-form input {
-    width: 100%;
+  .post-item {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+
+  .post-item h3 {
+    font-size: 1.05rem;
+  }
+
+  .post-item p {
+    font-size: 0.9rem;
+  }
+
+  footer {
+    padding: 20px 10px;
+    font-size: 0.85rem;
+  }
+
+  .centered-form {
+    padding: 15px 5px;
+    min-height: calc(100vh - 60px);
+  }
+}
+
+/* ---------- Extra Small Devices ---------- */
+@media (max-width: 400px) {
+  .container {
+    padding: 20px 15px;
+    margin: 10px auto;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  .post-item {
+    padding: 12px;
   }
 }
