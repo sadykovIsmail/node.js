@@ -10,10 +10,9 @@ html, body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   background: #f2f4f8;
   color: #222;
-  min-height: 100vh;
-  padding: 20px;
 }
 
+/* ---------- Links ---------- */
 a {
   color: #0078ff;
   text-decoration: none;
@@ -23,22 +22,42 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---------- Container ---------- */
-.container,
-.home-container {
+/* ---------- Navbar ---------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  font-weight: bold;
   background: #fff;
-  width: 100%;
-  max-width: 450px;
-  padding: 35px 30px;
-  border-radius: 14px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
-  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+.navbar a {
+  margin-left: 15px;
+  color: #0078ff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-left a {
+  margin-left: 0;
+}
+
+.navbar a:hover {
+  color: #005fcc;
+}
+
+/* ---------- Containers ---------- */
+.container,
 .home-container {
-  max-width: 500px;
-  margin: 60px auto;
-  text-align: center;
+  width: 100%;          /* Full width */
+  max-width: none;      /* Remove max-width */
+  margin: 20px auto;    /* Space from top/bottom */
+  padding: 20px;        /* Inner padding */
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.08);
 }
 
 h1, h2, h3 {
@@ -70,7 +89,6 @@ textarea,
 .membership-form input {
   width: 100%;
   padding: 12px 10px;
-  margin-bottom: 15px;
   font-size: 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -104,7 +122,7 @@ button:hover,
   background: #005fcc;
 }
 
-/* ---------- Dashboard & Members ---------- */
+/* ---------- Dashboard & Posts ---------- */
 .dashboard,
 .members {
   text-align: center;
@@ -138,7 +156,6 @@ button:hover,
   display: block;
 }
 
-/* ---------- New Post Section ---------- */
 .new-post {
   margin-top: 25px;
 }
@@ -155,7 +172,7 @@ button:hover,
   color: #999;
 }
 
-/* ---------- Logout Link ---------- */
+/* ---------- Logout ---------- */
 .logout {
   display: inline-block;
   margin-top: 20px;
@@ -167,36 +184,31 @@ button:hover,
   text-decoration: underline;
 }
 
-/* ---------- Navbar ---------- */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.navbar a {
-  margin-left: 15px;
-  color: #0078ff;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.nav-left a {
-  margin-left: 0;
-}
-
-.navbar a:hover {
-  color: #005fcc;
-}
-
-/* ---------- Centered Form for Login/Signup ---------- */
-.centered-form {
+/* ---------- Home Buttons ---------- */
+.home-buttons {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 80px);
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.home-buttons .btn {
+  padding: 12px 25px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+/* ---------- Messages ---------- */
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+.error {
+  color: #e84118;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 /* ---------- Page Wrapper & Footer ---------- */
@@ -218,40 +230,10 @@ footer {
   font-size: 14px;
 }
 
-/* ---------- Home Buttons ---------- */
-.home-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.home-buttons .btn {
-  padding: 12px 25px;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
-
-/* ---------- Success/Error Messages ---------- */
-.success {
-  color: green;
-  margin-top: 10px;
-}
-
-.error {
-  color: #e84118;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
 /* ---------- Responsive ---------- */
 @media (max-width: 500px) {
-  .container,
-  .home-container {
-    width: 90%;
-    padding: 25px 15px;
-    margin: 20px auto;
+  html, body {
+    padding: 10px;
   }
 
   h1, h2, h3 {
@@ -273,5 +255,11 @@ footer {
 
   .membership-form input {
     width: 100%;
+  }
+
+  .container,
+  .home-container {
+    padding: 15px;
+    margin: 10px 0;
   }
 }
