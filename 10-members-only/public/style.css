@@ -72,29 +72,24 @@ header hr {
 }
 
 .nav-right a {
-  color: #222;
+  color: #fff;
   text-decoration: none;
   font-weight: 500;
   padding: 8px 16px;
   border-radius: 6px;
-  transition: background 0.3s, color 0.3s;
+  background: #0078ff;
+  transition: background 0.3s, transform 0.1s;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
 }
 
 .nav-right a:hover {
-  background: #f2f4f8;
-  color: #0078ff;
-}
-
-.nav-right a:last-child {
-  background: #0078ff;
-  color: #fff;
-}
-
-.nav-right a:last-child:hover {
   background: #005fcc;
+}
+
+.nav-right a:active {
+  transform: scale(0.98);
 }
 
 /* ---------- Container ---------- */
@@ -326,24 +321,24 @@ footer {
     padding: 0 12px;
   }
 
-  .header {
+  header {
     margin: 0 -12px;
     padding: 0 12px;
   }
 
-  .header-nav {
+  .navbar {
     padding: 12px 15px;
   }
 
-  .header-logo {
+  .nav-left a {
     font-size: 1.25rem;
   }
 
-  .header-links {
+  .nav-right {
     gap: 12px;
   }
 
-  .header-links a {
+  .nav-right a {
     padding: 6px 12px;
     font-size: 0.9rem;
   }
@@ -365,24 +360,24 @@ footer {
     padding: 0 10px;
   }
 
-  .header {
+  header {
     margin: 0 -10px;
     padding: 0 10px;
   }
 
-  .header-nav {
+  .navbar {
     padding: 10px 12px;
   }
 
-  .header-logo {
+  .nav-left a {
     font-size: 1.15rem;
   }
 
-  .header-links {
+  .nav-right {
     gap: 8px;
   }
 
-  .header-links a {
+  .nav-right a {
     padding: 8px 12px;
     font-size: 0.85rem;
   }
