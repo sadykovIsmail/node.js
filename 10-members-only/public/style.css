@@ -6,8 +6,7 @@
 }
 
 html {
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+  font-size: 16px; /* base font size */
 }
 
 body {
@@ -19,8 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 15px;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  padding: 0 20px;
 }
 
 /* ---------- Container ---------- */
@@ -55,16 +53,28 @@ h3 {
   font-size: clamp(1.1rem, 3.5vw, 1.5rem);
 }
 
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
 .subtitle {
   color: #666;
-  font-size: clamp(0.9rem, 3vw, 1rem);
+  font-size: 16px;
   margin-bottom: 25px;
+  line-height: 1.5;
 }
 
 .error {
   color: #e84118;
   margin-bottom: 15px;
-  word-wrap: break-word;
 }
 
 /* ---------- Forms ---------- */
@@ -84,7 +94,7 @@ textarea,
 .membership-form input {
   width: 100%;
   padding: 14px 12px;
-  font-size: 16px; /* Prevents zoom on iOS */
+  font-size: 16px;
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
@@ -107,7 +117,8 @@ textarea {
 button,
 .membership-form button,
 .btn {
-  padding: 14px 20px;
+  width: 100%;
+  padding: 16px 20px;
   font-size: 16px;
   font-weight: bold;
   background: #0078ff;
@@ -116,10 +127,6 @@ button,
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s, transform 0.1s;
-  width: 100%;
-  max-width: 300px;
-  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
-  touch-action: manipulation; /* Improve touch responsiveness */
 }
 
 button:hover,
@@ -132,6 +139,11 @@ button:active,
 .membership-form button:active,
 .btn:active {
   transform: scale(0.98);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(0);
 }
 
 /* ---------- Dashboard & Posts ---------- */
@@ -164,14 +176,12 @@ button:active,
 
 .post-item p {
   margin-bottom: 10px;
-  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .post-item small {
   color: #888;
   display: block;
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
 }
 
 .new-post input,
@@ -183,7 +193,6 @@ button:active,
   text-align: center;
   font-style: italic;
   color: #999;
-  padding: 20px;
 }
 
 /* ---------- Logout ---------- */
@@ -192,11 +201,6 @@ button:active,
   margin-top: 20px;
   color: #e84118;
   font-weight: bold;
-  padding: 10px;
-  min-height: 44px; /* iOS minimum touch target */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .logout:hover {
@@ -213,7 +217,7 @@ button:active,
 }
 
 .home-buttons .btn {
-  padding: 14px 25px;
+  padding: 16px 25px;
   font-weight: bold;
   border-radius: 8px;
   transition: background 0.3s;
@@ -224,7 +228,6 @@ button:active,
 .success {
   color: green;
   margin-top: 10px;
-  word-wrap: break-word;
 }
 
 /* ---------- Footer ---------- */
@@ -232,8 +235,8 @@ footer {
   background: #f2f4f8;
   color: #666;
   text-align: center;
-  padding: 25px 15px;
-  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  padding: 25px 0;
+  font-size: 15px;
   margin-top: auto;
 }
 
@@ -243,138 +246,42 @@ footer {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px);
-  padding: 20px 15px;
+  padding: 20px;
 }
 
-/* ---------- Tablet Responsive ---------- */
-@media (max-width: 768px) {
-  body {
-    padding: 0 12px;
-  }
-
-  .container {
-    padding: 25px 20px;
-    margin: 15px auto;
-  }
-
-  .home-buttons .btn {
-    min-width: 120px;
-    padding: 12px 20px;
-  }
-}
-
-/* ---------- Mobile Responsive ---------- */
-@media (max-width: 480px) {
-  body {
-    padding: 0 10px;
+/* ---------- Responsive ---------- */
+@media (max-width: 500px) {
+  html {
+    font-size: 18px; /* scale up font for mobile readability */
   }
 
   .container,
   .home-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 15px auto;
-    padding: 25px 18px;
-    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 30px 20px;
   }
 
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  textarea,
-  .membership-form input {
-    padding: 16px 14px; /* Larger touch targets */
-    font-size: 16px;
+  h1, h2, h3 {
+    font-size: 1.5rem;
   }
 
-  button,
-  .membership-form button,
-  .btn {
-    padding: 16px 20px;
+  input, textarea, button {
     font-size: 16px;
-    width: 100%;
-    max-width: 100%;
+    padding: 14px 12px;
   }
 
   .home-buttons {
     flex-direction: column;
-    gap: 12px;
   }
 
   .home-buttons .btn {
     width: 100%;
-    min-width: 100%;
-    padding: 16px 20px;
+    padding: 14px 0;
   }
 
-  .post-item {
-    padding: 15px;
-    margin-bottom: 12px;
-  }
-
-  footer {
-    padding: 20px 10px;
-  }
-
-  .centered-form {
-    padding: 15px 10px;
-  }
-}
-
-/* ---------- Small Mobile Devices ---------- */
-@media (max-width: 360px) {
-  .container {
-    padding: 20px 15px;
-  }
-
-  .post-item {
-    padding: 12px;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  textarea,
-  button {
-    font-size: 16px; /* Never go below 16px to prevent iOS zoom */
-  }
-}
-
-/* ---------- Landscape Mobile ---------- */
-@media (max-height: 500px) and (orientation: landscape) {
-  .centered-form {
-    min-height: auto;
-    padding: 15px;
-  }
-
-  .container {
-    margin: 10px auto;
-    padding: 20px 18px;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-
-  .subtitle {
-    margin-bottom: 15px;
-  }
-}
-
-/* ---------- Accessibility & Touch Improvements ---------- */
-@media (hover: none) and (pointer: coarse) {
-  /* Touch device specific styles */
-  button,
-  .btn,
-  .logout,
-  a {
-    min-height: 44px; /* Apple's recommended minimum touch target */
-    min-width: 44px;
-  }
-
-  button:hover,
-  .btn:hover {
-    transform: none; /* Remove hover effect on touch devices */
+  .membership-form input {
+    width: 100%;
   }
 }
