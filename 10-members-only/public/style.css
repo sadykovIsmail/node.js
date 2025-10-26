@@ -23,6 +23,80 @@ body {
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
+/* ---------- Header Navigation ---------- */
+header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  margin: 0 -15px;
+  padding: 0 15px;
+}
+
+header hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
+}
+
+.navbar {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+.nav-left a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0078ff;
+  text-decoration: none;
+  transition: color 0.3s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-left a:hover {
+  color: #005fcc;
+}
+
+.nav-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-right a {
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-right a:hover {
+  background: #f2f4f8;
+  color: #0078ff;
+}
+
+.nav-right a:last-child {
+  background: #0078ff;
+  color: #fff;
+}
+
+.nav-right a:last-child:hover {
+  background: #005fcc;
+}
+
 /* ---------- Container ---------- */
 .container {
   background: #fff;
@@ -252,6 +326,28 @@ footer {
     padding: 0 12px;
   }
 
+  .header {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  .header-nav {
+    padding: 12px 15px;
+  }
+
+  .header-logo {
+    font-size: 1.25rem;
+  }
+
+  .header-links {
+    gap: 12px;
+  }
+
+  .header-links a {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
   .container {
     padding: 25px 20px;
     margin: 15px auto;
@@ -267,6 +363,28 @@ footer {
 @media (max-width: 480px) {
   body {
     padding: 0 10px;
+  }
+
+  .header {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+
+  .header-nav {
+    padding: 10px 12px;
+  }
+
+  .header-logo {
+    font-size: 1.15rem;
+  }
+
+  .header-links {
+    gap: 8px;
+  }
+
+  .header-links a {
+    padding: 8px 12px;
+    font-size: 0.85rem;
   }
 
   .container,
