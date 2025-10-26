@@ -6,19 +6,21 @@
 }
 
 html {
-  font-size: 16px; /* base font size */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
 }
 
 body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   background: #f2f4f8;
   color: #222;
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 15px;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* ---------- Container ---------- */
@@ -27,7 +29,7 @@ body {
   width: 100%;
   max-width: 450px;
   margin: 20px auto;
-  padding: 35px 30px;
+  padding: 30px 25px;
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
   text-align: center;
@@ -38,17 +40,31 @@ h1, h2, h3 {
   color: #222;
   margin-bottom: 20px;
   font-weight: 600;
+  word-wrap: break-word; /* Prevent long text overflow */
+}
+
+h1 {
+  font-size: clamp(1.5rem, 5vw, 2rem); /* Fluid typography */
+}
+
+h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+h3 {
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
 }
 
 .subtitle {
   color: #666;
-  font-size: 16px;
+  font-size: clamp(0.9rem, 3vw, 1rem);
   margin-bottom: 25px;
 }
 
 .error {
   color: #e84118;
   margin-bottom: 15px;
+  word-wrap: break-word;
 }
 
 /* ---------- Forms ---------- */
@@ -58,6 +74,7 @@ form,
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  width: 100%;
 }
 
 input[type="text"],
@@ -67,17 +84,24 @@ textarea,
 .membership-form input {
   width: 100%;
   padding: 14px 12px;
-  font-size: 16px;
+  font-size: 16px; /* Prevents zoom on iOS */
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
 }
 
 input:focus,
 textarea:focus {
   border-color: #0078ff;
   box-shadow: 0 0 6px rgba(0, 120, 255, 0.3);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 button,
@@ -92,13 +116,22 @@ button,
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s, transform 0.1s;
+  width: 100%;
+  max-width: 300px;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  touch-action: manipulation; /* Improve touch responsiveness */
 }
 
 button:hover,
 .membership-form button:hover,
 .btn:hover {
   background: #005fcc;
-  transform: translateY(-1px);
+}
+
+button:active,
+.membership-form button:active,
+.btn:active {
+  transform: scale(0.98);
 }
 
 /* ---------- Dashboard & Posts ---------- */
@@ -119,34 +152,38 @@ button:hover,
   border-radius: 8px;
   padding: 18px;
   margin-bottom: 15px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .post-item h3 {
   margin-bottom: 8px;
   color: #273c75;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 3vw, 1.1rem);
 }
 
 .post-item p {
   margin-bottom: 10px;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  line-height: 1.6;
 }
 
 .post-item small {
   color: #888;
   display: block;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
 }
 
 .new-post input,
 .new-post textarea {
   width: 100%;
-  resize: vertical;
 }
 
 .no-posts {
   text-align: center;
   font-style: italic;
   color: #999;
+  padding: 20px;
 }
 
 /* ---------- Logout ---------- */
@@ -155,6 +192,11 @@ button:hover,
   margin-top: 20px;
   color: #e84118;
   font-weight: bold;
+  padding: 10px;
+  min-height: 44px; /* iOS minimum touch target */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logout:hover {
@@ -175,12 +217,14 @@ button:hover,
   font-weight: bold;
   border-radius: 8px;
   transition: background 0.3s;
+  min-width: 140px;
 }
 
 /* ---------- Messages ---------- */
 .success {
   color: green;
   margin-top: 10px;
+  word-wrap: break-word;
 }
 
 /* ---------- Footer ---------- */
@@ -188,8 +232,8 @@ footer {
   background: #f2f4f8;
   color: #666;
   text-align: center;
-  padding: 25px 0;
-  font-size: 15px;
+  padding: 25px 15px;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
   margin-top: auto;
 }
 
@@ -199,42 +243,138 @@ footer {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px);
-  padding: 20px;
+  padding: 20px 15px;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 500px) {
-  html {
-    font-size: 18px; /* scale up font for mobile readability */
+/* ---------- Tablet Responsive ---------- */
+@media (max-width: 768px) {
+  body {
+    padding: 0 12px;
+  }
+
+  .container {
+    padding: 25px 20px;
+    margin: 15px auto;
+  }
+
+  .home-buttons .btn {
+    min-width: 120px;
+    padding: 12px 20px;
+  }
+}
+
+/* ---------- Mobile Responsive ---------- */
+@media (max-width: 480px) {
+  body {
+    padding: 0 10px;
   }
 
   .container,
   .home-container {
-    width: 90%;
-    max-width: 400px;
-    margin: 30px auto;
-    padding: 30px 20px;
+    width: 100%;
+    max-width: 100%;
+    margin: 15px auto;
+    padding: 25px 18px;
+    border-radius: 12px;
   }
 
-  h1, h2, h3 {
-    font-size: 1.5rem;
-  }
-
-  input, textarea, button {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  .membership-form input {
+    padding: 16px 14px; /* Larger touch targets */
     font-size: 16px;
-    padding: 14px 12px;
+  }
+
+  button,
+  .membership-form button,
+  .btn {
+    padding: 16px 20px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .home-buttons {
     flex-direction: column;
+    gap: 12px;
   }
 
   .home-buttons .btn {
     width: 100%;
-    padding: 14px 0;
+    min-width: 100%;
+    padding: 16px 20px;
   }
 
-  .membership-form input {
-    width: 100%;
+  .post-item {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+
+  footer {
+    padding: 20px 10px;
+  }
+
+  .centered-form {
+    padding: 15px 10px;
+  }
+}
+
+/* ---------- Small Mobile Devices ---------- */
+@media (max-width: 360px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .post-item {
+    padding: 12px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  button {
+    font-size: 16px; /* Never go below 16px to prevent iOS zoom */
+  }
+}
+
+/* ---------- Landscape Mobile ---------- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .centered-form {
+    min-height: auto;
+    padding: 15px;
+  }
+
+  .container {
+    margin: 10px auto;
+    padding: 20px 18px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .subtitle {
+    margin-bottom: 15px;
+  }
+}
+
+/* ---------- Accessibility & Touch Improvements ---------- */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device specific styles */
+  button,
+  .btn,
+  .logout,
+  a {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+    min-width: 44px;
+  }
+
+  button:hover,
+  .btn:hover {
+    transform: none; /* Remove hover effect on touch devices */
   }
 }
