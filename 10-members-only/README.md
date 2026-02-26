@@ -1,132 +1,166 @@
-# Members-Only Club App
+# 10 – Members Only
 
-A **Node.js** web application that allows users to register, log in, request membership codes, and access members-only content. The app uses **Express**, **Passport.js**, **PostgreSQL**, and **Nodemailer** for email-based membership verification.
+![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-v5-000000?logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-4169E1?logo=postgresql&logoColor=white)
+![Passport.js](https://img.shields.io/badge/Passport.js-0.7-34E27A)
+![Nodemailer](https://img.shields.io/badge/Nodemailer-7.x-22B8F0)
+
+A club-style web application with role-based access control. Registered users must verify their membership by entering a 6-digit code sent to their email — only then can they access and post exclusive club content.
 
 ---
 
 ## Features
 
-- User registration and login with secure password hashing (bcrypt)
-- Membership code generation and email verification
-- Access control: only members can view exclusive posts
-- Create and view posts on the members-only page
-- Session management with **express-session**
-- Flash messages for feedback
-
----
-
-## Tech Stack
-
-- **Backend:** Node.js, Express, Passport.js, bcrypt, Nodemailer  
-- **Database:** PostgreSQL (local or hosted on Neon)  
-- **Templating:** EJS  
-- **Version Control:** Git & GitHub  
+- User registration and login (bcrypt + Passport.js)
+- Email-based membership verification (Nodemailer via Gmail SMTP)
+- Role-based access: guest → logged-in user → verified member
+- Members-only post creation and viewing
+- Middleware guards on protected routes
+- Flash messages for user feedback
+- Session management with `express-session`
 
 ---
 
 ## Screenshots
 
-**Dashboard (before membership):**  
+**Dashboard — before membership verification:**
+
 ![Dashboard Before](screenshots/dashboard_before.png)
 
-**Request Membership Code:**  
+**Request membership code:**
+
 ![Request Code](screenshots/request_code.png)
 
-**Members-Only Page:**  
+**Members-only page:**
+
 ![Members Page](screenshots/members_page.png)
 
 ---
 
-## Getting Started
+## Architecture
 
-### Prerequisites
+```
+Request → Express Router → Auth Middleware (isLoggedIn / isMember) → Controller → pg Pool → View
+```
 
-- Node.js v18+  
-- PostgreSQL (local or hosted DB)  
-- Git  
+```
+10-members-only/
+├── app.js                  # Express setup, Passport config, inline routes
+├── db.js                   # pg connection pool
+├── mailer.js               # Nodemailer transporter configuration
+├── middleware/
+│   └── auth.js             # isLoggedIn and isMember guards
+├── routes/
+│   ├── auth.js             # /sign-up routes
+│   └── members.js          # /members routes
+├── controllers/
+│   └── authController.js   # Registration logic with validation
+├── public/                 # Static assets (CSS)
+├── views/                  # EJS templates
+│   ├── index.ejs
+│   ├── log-in.ejs
+│   ├── dashboard.ejs
+│   └── members.ejs
+└── screenshots/            # Application screenshots
+```
 
-### Clone the repository
+---
 
-```bash
-git clone https://github.com/sadykovIsmail/node.js.git
-cd node.js/10-members-only
-Install dependencies
-bash
-Копировать код
-npm install
-Configure environment variables
-Create a .env file:
+## Routes
 
-env
-Копировать код
-DATABASE_URL=postgresql://username:password@host:port/dbname
-SECRET=mySuperSecretSessionKey
+| Method | Path | Middleware | Description |
+|--------|------|------------|-------------|
+| GET | `/` | — | Public home page |
+| GET | `/sign-up` | — | Registration form |
+| POST | `/sign-up` | — | Register new user |
+| GET | `/log-in` | — | Login form |
+| POST | `/log-in` | — | Authenticate with Passport |
+| GET | `/log-out` | — | Destroy session |
+| GET | `/dashboard` | `isLoggedIn` | User dashboard |
+| POST | `/request-membership` | `isLoggedIn` | Send 6-digit code to user's email |
+| POST | `/become-member` | `isLoggedIn` | Verify code and upgrade membership |
+| GET | `/members` | `isMember` | View all club posts |
+| POST | `/members` | `isMember` | Create a new club post |
 
-# Email (Gmail or other SMTP)
-EMAIL_USER=your_email@example.com
-EMAIL_PASS=your_email_password
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=465
-For Gmail, you may need an App Password and enable less secure apps if necessary.
+---
 
-Initialize the database
-sql
+## Database Schema
 
--- Example schema for PostgreSQL
+```sql
 CREATE TABLE members (
-  member_id SERIAL PRIMARY KEY,
-  first_name VARCHAR(50) NOT NULL,
-  last_name VARCHAR(50) NOT NULL,
-  email_address VARCHAR(100) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
+  member_id         SERIAL PRIMARY KEY,
+  first_name        VARCHAR(50)  NOT NULL,
+  last_name         VARCHAR(50)  NOT NULL,
+  email_address     VARCHAR(100) UNIQUE NOT NULL,
+  password_hash     VARCHAR(255) NOT NULL,
   membership_status BOOLEAN DEFAULT FALSE,
-  admin_status BOOLEAN DEFAULT FALSE,
-  joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  admin_status      BOOLEAN DEFAULT FALSE,
+  joined_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE club_posts (
-  post_id SERIAL PRIMARY KEY,
-  author_id INTEGER REFERENCES members(member_id),
+  post_id    SERIAL PRIMARY KEY,
+  author_id  INTEGER REFERENCES members(member_id),
   post_title VARCHAR(255) NOT NULL,
-  post_body TEXT NOT NULL,
-  posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  post_body  TEXT         NOT NULL,
+  posted_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-Start the app
-bash
-Копировать код
-node app.js
-Open your browser at http://localhost:3000
+```
 
-Usage
-Register or log in.
+---
 
-Request a membership code (sent to your email).
+## Security Practices
 
-Enter the code in the dashboard.
+| Practice | Detail |
+|----------|--------|
+| Password hashing | bcrypt with 10 salt rounds |
+| SQL injection prevention | Parameterized queries (`$1`, `$2`) via `pg` |
+| Session security | Secret loaded from `process.env.SECRET` |
+| Route protection | `isLoggedIn` and `isMember` middleware enforce access |
+| Role-based access | `membership_status` column checked on every members route |
+| Input validation | `express-validator` on sign-up form |
 
-Access members-only posts and create your own posts.
+---
 
-Contributing
-Fork the repository
+## Environment Variables
 
-Create a branch (git checkout -b feature-name)
+Create a `.env` file in this directory:
 
-Make your changes
+```
+DATABASE_URL=postgresql://username:password@host:port/dbname
+SECRET=your-session-secret
 
-Commit (git commit -am 'Add new feature')
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=465
+```
 
-Push (git push origin feature-name)
+> For Gmail, generate an [App Password](https://support.google.com/accounts/answer/185833) rather than using your account password directly.
 
-Create a Pull Request
+---
 
-License
-MIT License © Ismail Sadykov
+## Prerequisites
 
-Notes
-For production deployment, use environment variables for DB credentials and email.
+- Node.js v18+
+- PostgreSQL (local or hosted — e.g., [Neon](https://neon.tech))
+- A Gmail account with App Passwords enabled (or another SMTP provider)
 
-Ensure your SMTP service allows sending emails from Node.js (Gmail, Mailgun, etc.).
+---
 
-Remove temporary code storage if scaling to multiple servers; consider storing codes in DB with expiration.
+## How to Run
 
+```bash
+npm install
+npm start        # node app.js
+npm run dev      # nodemon app.js (auto-reload)
+```
 
+Open your browser at `http://localhost:3000`.
+
+---
+
+## Part of
+
+[sadykovIsmail/node.js](https://github.com/sadykovIsmail/node.js) — The Odin Project Node.js curriculum

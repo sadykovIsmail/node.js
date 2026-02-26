@@ -12,10 +12,13 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 ## Table of Contents
 
 - [Featured Projects](#featured-projects)
+- [Architecture Overview](#architecture-overview)
 - [Tech Stack](#tech-stack)
 - [Projects Overview](#projects-overview)
 - [Getting Started](#getting-started)
 - [Project Details](#project-details)
+- [Security Practices](#security-practices)
+- [Future Improvements](#future-improvements)
 - [License](#license)
 
 ---
@@ -25,8 +28,47 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 | Project | What It Demonstrates | Link |
 |---------|----------------------|------|
 | **10 – Members Only** | Role-based access control, email-verified membership, Passport.js, bcrypt, session management | [View →](https://github.com/sadykovIsmail/node.js/tree/main/10-members-only) |
-| **13 – Social Media App** | REST API design, real-time messaging with Socket.io, Prisma ORM, friend/follow system | [View →](https://github.com/sadykovIsmail/node.js/tree/main/13-social-media-app) |
+| **13 – Social Media App** | REST API design, JWT authentication, real-time messaging with Socket.io, Prisma ORM | [View →](https://github.com/sadykovIsmail/node.js/tree/main/13-social-media-app) |
 | **08 – Inventory App** | Full CRUD with Sequelize ORM, relational data modeling, admin-protected routes | [View →](https://github.com/sadykovIsmail/node.js/tree/main/08-inventory-app) |
+
+---
+
+## Architecture Overview
+
+This repository demonstrates three architectural patterns across its projects, applied progressively as complexity grows.
+
+### Progression
+
+| Projects | Pattern | Description |
+|----------|---------|-------------|
+| 01–03 | Single-file | All logic in one file — routing, handling, and response |
+| 04–05 | Flat Express | Express with views, no separation of concerns |
+| 06–07 | MVC (in-memory / raw SQL) | Routes, controllers, and views separated |
+| 08–12 | Full MVC + ORM | Models, controllers, routes, views, middleware layers |
+| 13 | REST API + WebSocket | Stateless API with JWT auth and Socket.io real-time layer |
+
+### MVC Request Flow (Projects 06–12)
+
+```
+HTTP Request
+     │
+     ▼
+Express Router  ──► Middleware (auth, validation)
+     │
+     ▼
+Controller  ──► Model / Database (pg, Sequelize, or Prisma)
+     │
+     ▼
+View (EJS template) or JSON Response
+```
+
+### Real-Time Architecture (Project 13)
+
+```
+REST Client ──► Express Routes ──► Prisma (PostgreSQL)
+                     │
+Socket.io Client ──► Socket.io Server ──► Room-based message broadcast
+```
 
 ---
 
@@ -38,7 +80,7 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 | Framework | Express.js v5 |
 | Templating | EJS |
 | Databases | PostgreSQL, Sequelize ORM, Prisma ORM |
-| Authentication | Passport.js (Local Strategy), bcryptjs, express-session |
+| Authentication | Passport.js (Local Strategy), bcryptjs, express-session, JWT |
 | Real-time | Socket.io |
 | Email | Nodemailer (Gmail SMTP) |
 | Validation | express-validator |
@@ -62,7 +104,7 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 | 10 | [Members Only](#10-members-only) | Role-based access control with email-verified membership | Express.js, Passport.js, Nodemailer |
 | 11 | [Prisma Demo](#11-prisma-demo) | Schema-first ORM with migrations and Prisma Client | Prisma, PostgreSQL |
 | 12 | [File Uploader](#12-file-uploader) | Authenticated file upload with Prisma persistence | Express.js, Prisma, Passport.js |
-| 13 | [Social Media App](#13-social-media-app) | REST API with real-time messaging via Socket.io | Express.js, Socket.io, Prisma |
+| 13 | [Social Media App](#13-social-media-app) | REST API with JWT auth and real-time messaging via Socket.io | Express.js, Socket.io, Prisma |
 
 ---
 
@@ -151,7 +193,7 @@ A CRUD message board backed by in-memory storage. Users can create, view, and br
 
 ### 06. Profile App
 
-A user profile form with server-side validation via `express-validator`. Validation errors are displayed inline.
+A user profile form with server-side validation via `express-validator`. Validation errors are displayed inline. First project to use a dedicated controller layer.
 
 **Concepts:** Input validation, error rendering, MVC-style controller/route separation
 
@@ -218,28 +260,68 @@ An authenticated web application with file upload capabilities. Uses Prisma for 
 
 ### 13. Social Media App
 
-A REST API backend for a social media platform with real-time private messaging via Socket.io.
+A REST API backend for a social media platform with JWT-based authentication and real-time private messaging via Socket.io.
 
 **Features:**
-- User authentication and profiles
-- Post creation and feed
-- Friend/follow system
+- User registration and login (JWT)
+- Post creation, feed, likes, and comments
+- Friend request and acceptance system
 - Real-time direct messaging (Socket.io)
 
 **API Routes:**
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Authenticate and start session |
-| GET/POST | `/api/posts` | Read feed / create a post |
-| GET | `/api/users` | List users |
-| POST | `/api/friends` | Send a friend request |
-| GET/POST | `/api/messages` | Read / send direct messages |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | Public | Register a new user |
+| POST | `/api/auth/login` | Public | Authenticate and receive JWT |
+| GET | `/api/auth/me` | JWT | Get current user profile |
+| GET | `/api/posts` | JWT | Fetch post feed |
+| POST | `/api/posts` | JWT | Create a post |
+| POST | `/api/posts/:id/like` | JWT | Toggle like on a post |
+| POST | `/api/posts/:id/comments` | JWT | Add a comment |
+| DELETE | `/api/posts/:id` | JWT | Delete own post |
+| GET | `/api/users` | JWT | List users |
+| POST | `/api/friends/request` | JWT | Send friend request |
+| GET | `/api/friends/requests` | JWT | List pending requests |
+| POST | `/api/friends/accept/:id` | JWT | Accept friend request |
+| GET | `/api/friends/list` | JWT | List friends |
+| GET/POST | `/api/messages` | JWT | Read / send direct messages |
 
 **Socket.io Events:** `join`, `send_message`, `receive_message`, `disconnect`
 
-**Concepts:** REST API design, Socket.io, Prisma ORM, ES modules, CORS configuration
+**Concepts:** REST API design, JWT authentication, Socket.io, Prisma ORM, ES modules, CORS configuration
+
+---
+
+## Security Practices
+
+The following security measures are applied across the more advanced projects:
+
+| Practice | Projects | Implementation |
+|----------|----------|----------------|
+| Password hashing | 09, 10, 13 | bcrypt with 10 salt rounds |
+| SQL injection prevention | 07, 09, 10 | Parameterized queries via `pg` (`$1`, `$2` placeholders) |
+| Session security | 09, 10 | `express-session` with secret from environment variable |
+| JWT authentication | 13 | Signed tokens with `jsonwebtoken`, verified on every protected route |
+| Route protection | 10, 13 | Custom middleware (`isLoggedIn`, `isMember`, `authenticateToken`) |
+| Role-based access | 10 | Membership status checked before serving protected content |
+| Input validation | 06, 10, 12 | `express-validator` sanitizes and validates all user input |
+| Environment variables | 08, 10, 12, 13 | Credentials stored in `.env`, never hardcoded in production code |
+
+---
+
+## Future Improvements
+
+These improvements would bring the projects closer to production-grade quality:
+
+- **Automated testing** — unit and integration tests with Jest and Supertest
+- **Docker support** — `Dockerfile` and `docker-compose.yml` for reproducible local environments
+- **Rate limiting** — `express-rate-limit` on auth endpoints to prevent brute-force attacks
+- **Centralized error handling** — a global Express error middleware to standardize error responses
+- **Logging** — structured request logging with Morgan (dev) and Winston (production)
+- **Session persistence** — Redis-backed sessions instead of in-memory storage
+- **CI/CD pipeline** — GitHub Actions for automated linting and test runs on push
+- **HTTPS** — TLS termination via reverse proxy (Nginx) or a managed platform
 
 ---
 
