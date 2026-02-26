@@ -1,17 +1,48 @@
 # Node.js Backend Projects
 
-A progressive collection of **13 Node.js backend projects** built through [The Odin Project](https://www.theodinproject.com/) curriculum. Each project introduces new concepts, tools, and architectural patterns — progressing from basic HTTP servers to full-stack applications with real-time communication.
+![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-v5-000000?logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-4169E1?logo=postgresql&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+A progressive collection of **13 Node.js backend projects** built through [The Odin Project](https://www.theodinproject.com/) curriculum. Each project introduces new concepts, tools, and architectural patterns — progressing from bare HTTP servers to full-stack applications with authentication, ORM-backed databases, and real-time communication.
 
 ---
 
 ## Table of Contents
 
-- [Projects Overview](#projects-overview)
+- [Featured Projects](#featured-projects)
 - [Tech Stack](#tech-stack)
+- [Projects Overview](#projects-overview)
 - [Getting Started](#getting-started)
 - [Project Details](#project-details)
-- [Skills Developed](#skills-developed)
 - [License](#license)
+
+---
+
+## Featured Projects
+
+| Project | What It Demonstrates | Link |
+|---------|----------------------|------|
+| **10 – Members Only** | Role-based access control, email-verified membership, Passport.js, bcrypt, session management | [View →](https://github.com/sadykovIsmail/node.js/tree/main/10-members-only) |
+| **13 – Social Media App** | REST API design, real-time messaging with Socket.io, Prisma ORM, friend/follow system | [View →](https://github.com/sadykovIsmail/node.js/tree/main/13-social-media-app) |
+| **08 – Inventory App** | Full CRUD with Sequelize ORM, relational data modeling, admin-protected routes | [View →](https://github.com/sadykovIsmail/node.js/tree/main/08-inventory-app) |
+
+---
+
+## Tech Stack
+
+| Category | Technologies |
+|----------|--------------|
+| Runtime | Node.js v18+ |
+| Framework | Express.js v5 |
+| Templating | EJS |
+| Databases | PostgreSQL, Sequelize ORM, Prisma ORM |
+| Authentication | Passport.js (Local Strategy), bcryptjs, express-session |
+| Real-time | Socket.io |
+| Email | Nodemailer (Gmail SMTP) |
+| Validation | express-validator |
+| Utilities | dotenv, CORS, body-parser |
 
 ---
 
@@ -19,33 +50,19 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 
 | # | Project | Description | Key Tech |
 |---|---------|-------------|----------|
-| 01 | [Hello World](#01-hello-world) | Bare Node.js HTTP server | Node.js |
-| 02 | [Basic Information Site](#02-basic-information-site) | Static site served with Node.js | Node.js, HTML |
-| 03 | [Hello World Express](#03-hello-world-express) | Intro to Express routing | Express.js |
-| 04 | [Express EJS App](#04-express-ejs-app) | Dynamic pages with EJS templating | Express.js, EJS |
-| 05 | [Message Board](#05-message-board) | CRUD message board | Express.js, EJS |
-| 06 | [Profile App](#06-profile-app) | Form handling and validation | Express.js, EJS, express-validator |
-| 07 | [Express + PostgreSQL](#07-express--postgresql) | First database integration | Express.js, PostgreSQL, pg |
-| 08 | [Inventory App](#08-inventory-app) | Full CRUD inventory management | Express.js, Sequelize, PostgreSQL |
-| 09 | [Authentication](#09-authentication) | User auth with sessions | Express.js, Passport.js, bcrypt |
-| 10 | [Members Only](#10-members-only) | Role-based access control | Express.js, Passport.js, Nodemailer |
-| 11 | [Prisma Demo](#11-prisma-demo) | ORM exploration with Prisma | Prisma, PostgreSQL |
-| 12 | [File Uploader](#12-file-uploader) | File upload with auth | Express.js, Prisma, Passport.js |
-| 13 | [Social Media App](#13-social-media-app) | REST API + real-time messaging | Express.js, Socket.io, Prisma |
-
----
-
-## Tech Stack
-
-- **Runtime:** Node.js v18+
-- **Framework:** Express.js v5
-- **Templating:** EJS
-- **Databases:** PostgreSQL, Prisma ORM, Sequelize ORM
-- **Authentication:** Passport.js, bcrypt, express-session
-- **Real-time:** Socket.io
-- **Email:** Nodemailer
-- **Validation:** express-validator
-- **Other:** dotenv, CORS, body-parser
+| 01 | [Hello World](#01-hello-world) | Bare Node.js HTTP server, no frameworks | Node.js |
+| 02 | [Basic Information Site](#02-basic-information-site) | Multi-page static site with custom routing | Node.js |
+| 03 | [Hello World Express](#03-hello-world-express) | Intro to Express routing and middleware | Express.js |
+| 04 | [Express EJS App](#04-express-ejs-app) | Dynamic pages with server-side rendering | Express.js, EJS |
+| 05 | [Message Board](#05-message-board) | In-memory CRUD message board | Express.js, EJS |
+| 06 | [Profile App](#06-profile-app) | Server-side form validation with inline errors | Express.js, express-validator |
+| 07 | [Express + PostgreSQL](#07-express--postgresql) | Raw SQL queries via the `pg` driver | Express.js, PostgreSQL |
+| 08 | [Inventory App](#08-inventory-app) | Full CRUD inventory system with categories and stock tracking | Express.js, Sequelize, PostgreSQL |
+| 09 | [Authentication](#09-authentication) | User registration and login with hashed passwords and sessions | Express.js, Passport.js, bcrypt |
+| 10 | [Members Only](#10-members-only) | Role-based access control with email-verified membership | Express.js, Passport.js, Nodemailer |
+| 11 | [Prisma Demo](#11-prisma-demo) | Schema-first ORM with migrations and Prisma Client | Prisma, PostgreSQL |
+| 12 | [File Uploader](#12-file-uploader) | Authenticated file upload with Prisma persistence | Express.js, Prisma, Passport.js |
+| 13 | [Social Media App](#13-social-media-app) | REST API with real-time messaging via Socket.io | Express.js, Socket.io, Prisma |
 
 ---
 
@@ -57,31 +74,36 @@ A progressive collection of **13 Node.js backend projects** built through [The O
 - [PostgreSQL](https://www.postgresql.org/) (required for projects 07–13)
 - Git
 
-### Clone the repository
+### Setup
 
 ```bash
 git clone https://github.com/sadykovIsmail/node.js.git
 cd node.js
 ```
 
-### Run any project
+### Run Any Project
 
 ```bash
-# Navigate to a project folder
-cd 05-message-board
+# 1. Navigate to the project directory
+cd 10-members-only
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Start the server
-npm start
-# or for dev mode (where available)
-npm run dev
+# 3. Start the server
+npm start        # production mode
+npm run dev      # development mode with auto-reload (where available)
 ```
 
 Then open your browser at `http://localhost:3000`.
 
-> **Note:** Projects 07–13 require a running PostgreSQL instance. Copy `.env.example` to `.env` (if present) and configure your database connection string before starting.
+> **Database projects (07–13):** Create a `.env` file in the project directory and configure the required environment variables. Check the project's `app.js` or `index.js` for expected variable names. A typical setup:
+>
+> ```
+> DATABASE_URL=postgresql://user:password@host:5432/dbname
+> SESSION_SECRET=your-secret-key
+> PORT=3000
+> ```
 
 ---
 
@@ -89,7 +111,7 @@ Then open your browser at `http://localhost:3000`.
 
 ### 01. Hello World
 
-A minimal HTTP server built with Node's built-in `http` module — no frameworks. Responds with `"Hello, World!"` to every request.
+A minimal HTTP server using Node's built-in `http` module — no frameworks or dependencies. Responds with `"Hello, World!"` on every request.
 
 **Concepts:** `http.createServer`, request/response cycle
 
@@ -97,7 +119,7 @@ A minimal HTTP server built with Node's built-in `http` module — no frameworks
 
 ### 02. Basic Information Site
 
-A multi-page static site served by Node.js. Routes requests to different HTML files (`index`, `about`, `contact`, `404`).
+Multi-page site served by Node.js. Manually routes requests to static HTML files (`index`, `about`, `contact`) with a custom 404 handler.
 
 **Concepts:** File system routing, serving static HTML, 404 handling
 
@@ -105,7 +127,7 @@ A multi-page static site served by Node.js. Routes requests to different HTML fi
 
 ### 03. Hello World Express
 
-First steps with Express.js. Sets up basic routes and demonstrates how Express simplifies HTTP handling.
+Introduction to Express.js. Replaces manual routing from project 02 with Express's router abstraction.
 
 **Concepts:** Express routing, middleware basics
 
@@ -113,7 +135,7 @@ First steps with Express.js. Sets up basic routes and demonstrates how Express s
 
 ### 04. Express EJS App
 
-Introduces server-side rendering using EJS templates. Passes dynamic data from the server to the view layer.
+Introduces server-side rendering using the EJS template engine. Passes dynamic data from the server to the view layer.
 
 **Concepts:** Template engines, `res.render()`, dynamic views
 
@@ -121,7 +143,7 @@ Introduces server-side rendering using EJS templates. Passes dynamic data from t
 
 ### 05. Message Board
 
-A simple message board where users can create and view messages. First CRUD application.
+A CRUD message board backed by in-memory storage. Users can create, view, and browse messages.
 
 **Concepts:** POST/GET routes, in-memory data, EJS forms, CRUD
 
@@ -129,31 +151,31 @@ A simple message board where users can create and view messages. First CRUD appl
 
 ### 06. Profile App
 
-A profile form with server-side input validation using `express-validator`. Displays validation errors inline.
+A user profile form with server-side validation via `express-validator`. Validation errors are displayed inline.
 
-**Concepts:** Form validation, error handling, MVC-style controller/route separation
+**Concepts:** Input validation, error rendering, MVC-style controller/route separation
 
 ---
 
 ### 07. Express + PostgreSQL
 
-First database-backed application. Connects to PostgreSQL using the `pg` driver and performs raw SQL queries.
+Express API connected to PostgreSQL using the `pg` driver and parameterized raw SQL queries.
 
-**Concepts:** Database connections, raw SQL, `pg` client, environment variables
+**Concepts:** Database connections, parameterized queries, `pg` client, environment variables
 
 ---
 
 ### 08. Inventory App
 
-A full inventory management system with product categories, stock tracking, and complete CRUD operations. Uses Sequelize as the ORM and EJS layouts for a consistent UI.
+A full inventory management system with product categories, stock tracking, and complete CRUD operations. Admin routes are password-protected.
 
-**Concepts:** Sequelize ORM, relational data modeling, RESTful routing, EJS layouts, CORS
+**Concepts:** Sequelize ORM, relational data modeling, RESTful routing, EJS layouts, admin route protection
 
 ---
 
 ### 09. Authentication
 
-Implements user registration, login, and logout using Passport.js (local strategy). Passwords are hashed with bcrypt and sessions are managed with express-session.
+User registration and login built with Passport.js (local strategy). Passwords are hashed with bcrypt (10 salt rounds) and sessions are managed with `express-session`.
 
 **Concepts:** Passport.js local strategy, bcrypt password hashing, session management, protected routes
 
@@ -161,11 +183,11 @@ Implements user registration, login, and logout using Passport.js (local strateg
 
 ### 10. Members Only
 
-A club-style app with role-based access control. Users can register, request a membership code (sent via email), and unlock exclusive content upon verification.
+A club-style application with role-based access control. Users register, request a membership code delivered by email, and unlock exclusive content after verification.
 
 **Features:**
 - Secure registration and login (bcrypt + Passport.js)
-- Membership code generation and email delivery (Nodemailer)
+- Membership code generation and email delivery (Nodemailer via Gmail SMTP)
 - Members-only post creation and viewing
 - Flash messages for user feedback
 
@@ -175,7 +197,7 @@ A club-style app with role-based access control. Users can register, request a m
 
 ### 11. Prisma Demo
 
-An introductory project exploring Prisma ORM as a modern alternative to raw SQL and Sequelize. Demonstrates schema definition, migrations, and basic queries.
+Explores Prisma ORM as a modern alternative to raw SQL and Sequelize. Covers schema definition, migrations, and basic CRUD with Prisma Client.
 
 **Concepts:** Prisma schema, `prisma migrate`, Prisma Client, ES modules
 
@@ -183,11 +205,11 @@ An introductory project exploring Prisma ORM as a modern alternative to raw SQL 
 
 ### 12. File Uploader
 
-A web application with user authentication and file upload capabilities. Built with Prisma for data persistence and Passport.js for session-based auth.
+An authenticated web application with file upload capabilities. Uses Prisma for data persistence and Passport.js for session-based authentication.
 
 **Features:**
 - User signup / login / logout
-- Dashboard with uploaded files
+- Dashboard listing uploaded files
 - Session-based authentication
 
 **Concepts:** File handling, Prisma with PostgreSQL, express-validator, passport-local
@@ -196,32 +218,28 @@ A web application with user authentication and file upload capabilities. Built w
 
 ### 13. Social Media App
 
-The most advanced project — a REST API backend for a social media platform with real-time messaging via Socket.io.
+A REST API backend for a social media platform with real-time private messaging via Socket.io.
 
 **Features:**
 - User authentication and profiles
 - Post creation and feed
 - Friend/follow system
-- Real-time private messaging (Socket.io)
+- Real-time direct messaging (Socket.io)
 
-**Concepts:** REST API design, Socket.io, Prisma, ES modules, CORS configuration
+**API Routes:**
 
----
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Authenticate and start session |
+| GET/POST | `/api/posts` | Read feed / create a post |
+| GET | `/api/users` | List users |
+| POST | `/api/friends` | Send a friend request |
+| GET/POST | `/api/messages` | Read / send direct messages |
 
-## Skills Developed
+**Socket.io Events:** `join`, `send_message`, `receive_message`, `disconnect`
 
-- Building HTTP servers from scratch with Node.js
-- Structuring Express.js applications (MVC, routes, controllers, middleware)
-- Server-side rendering with EJS templating
-- Relational database design and querying (PostgreSQL)
-- ORM usage with both Sequelize and Prisma
-- User authentication: sessions, Passport.js, bcrypt
-- Role-based access control and route protection
-- Input validation and sanitization
-- Real-time communication with Socket.io
-- Email integration with Nodemailer
-- RESTful API design
-- Working with environment variables and `.env` configuration
+**Concepts:** REST API design, Socket.io, Prisma ORM, ES modules, CORS configuration
 
 ---
 
