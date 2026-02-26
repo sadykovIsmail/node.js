@@ -1,6 +1,6 @@
 <div align="center">
 
-# Backend Engineering Portfolio
+# Node.js Backend Systems
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express.js](https://img.shields.io/badge/Express.js-v5-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com)
@@ -11,22 +11,31 @@
 [![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)](https://jwt.io)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-**13 backend systems** spanning REST APIs, real-time messaging, auth pipelines, and ORM-backed databases —
-progressing from bare HTTP to production-style Node.js architecture.
+Secure, structured backend systems built with Node.js —
+JWT auth pipelines, RBAC middleware, REST APIs, and real-time communication.
 
 </div>
 
 ---
 
+## Engineering Approach
+
+- **Secure by default** — bcrypt hashing, parameterized queries, and auth middleware are applied before any business logic executes, not bolted on afterward
+- **Middleware-driven access control** — composable Express guards (`isLoggedIn`, `isMember`, `authenticateToken`) enforce access tiers without coupling policy to controllers
+- **Explicit API contracts** — RESTful routes follow consistent HTTP semantics; request bodies are validated server-side before reaching the data layer
+- **Progressive architectural rigor** — each system increases structural complexity, from single-file handlers to full MVC with ORM-abstracted, migration-managed data layers
+
+---
+
 ## Engineering Highlights
 
-- Designed a **JWT-authenticated REST API** with 15 endpoints, a social graph, post interactions, and real-time Socket.io messaging
-- Enforced **role-based access control** via composable Express middleware — `isLoggedIn` / `isMember` guard layers
-- Implemented a **transactional email verification flow** using Nodemailer SMTP with one-time 6-digit codes
-- Applied **parameterized SQL throughout** all `pg`-backed projects — no string-concatenated queries
-- Compared **three database abstraction layers** in the same stack: raw `pg`, Sequelize ORM, and schema-driven Prisma
-- Structured applications using **MVC patterns** with separated routes, controllers, models, and middleware from project 06 onward
-- Configured **Socket.io room-based delivery** (`user_{id}`) for targeted real-time message broadcast
+- Role-based access control via `isLoggedIn` / `isMember` middleware — membership tier verified before any controller runs
+- JWT pipeline — `Bearer` token extraction, `jsonwebtoken.verify()` signature check, and `req.user` injection on every protected route
+- 15-endpoint REST API with a social graph — posts, likes, comments, friend requests, and direct messaging
+- Three ORM abstraction levels in one codebase — raw `pg`, Sequelize, and schema-driven Prisma migrations
+- Socket.io room-based delivery — `user_{id}` rooms target messages to individual recipients without global broadcast
+- Parameterized SQL across all `pg`-backed routes — `$1`/`$2` placeholders, injection-safe by construction
+- Server-side input validation with `express-validator` — sanitization and structured inline error rendering
 
 ---
 
@@ -35,36 +44,45 @@ progressing from bare HTTP to production-style Node.js architecture.
 ```mermaid
 graph LR
     subgraph Clients
-        A[HTTP Client]
+        A[REST Client]
         B[WebSocket Client]
     end
 
-    subgraph Express Application
-        C[Router]
-        D["JWT / Session / RBAC<br/>Middleware"]
+    subgraph Application
+        C[Express Router]
+        D["Auth Middleware<br/>JWT · Session · RBAC"]
         E[Controllers]
     end
 
-    subgraph Data Layer
+    subgraph Database
         F[(PostgreSQL)]
-        G[Prisma ORM]
-        H[Sequelize ORM]
-        I[raw pg]
     end
 
     subgraph Services
-        J["Socket.io<br/>Room Broadcast"]
-        K["Nodemailer<br/>SMTP"]
+        G["Socket.io<br/>Room Broadcast"]
+        H["Nodemailer<br/>SMTP"]
     end
 
-    A -->|Bearer Token| C
-    B --> J
+    A -->|HTTP + Bearer Token| C
     C --> D --> E
-    E --> G & H & I
-    G & H & I --> F
-    E --> K
-    J --> F
+    E -->|Prisma · Sequelize · raw pg| F
+    B --> G
+    G --> F
+    E --> H
 ```
+
+---
+
+## System Evolution
+
+| Stage | Projects | Architecture | Added Complexity |
+|-------|----------|-------------|-----------------|
+| Foundations | 01–03 | Single-file server | HTTP module, Express router, middleware chain |
+| Server-Side Rendering | 04–05 | Flat Express + EJS | Templating engine, in-memory CRUD, form handling |
+| MVC | 06–07 | Routes / Controllers / Views | Controller layer, input validation, raw SQL via `pg` |
+| ORM Layer | 08, 11 | Full MVC + ORM | Sequelize, Prisma, schema-first migrations |
+| Auth Systems | 09, 10, 12 | MVC + Auth Middleware | Passport.js, bcrypt, sessions, RBAC, email OTP |
+| Real-Time API | 13 | Stateless REST + WebSocket | JWT, Socket.io rooms, social graph, Prisma |
 
 ---
 
@@ -72,52 +90,52 @@ graph LR
 
 ### 13 · Social Media API
 
-> Express · Prisma · Socket.io · JWT · CORS
+`Express` `Prisma` `Socket.io` `JWT` `PostgreSQL`
 
-Production-style REST API backend for a social platform. JWT-protected, stateless, with a social graph and real-time messaging layer.
+JWT-authenticated REST API with a social graph and real-time private messaging.
 
 | | |
 |---|---|
-| **Auth** | JWT (7-day), bcrypt (10 rounds) |
-| **Real-time** | Socket.io — room-based delivery (`user_{id}`) |
-| **ORM** | Prisma with schema-driven migrations |
-| **Endpoints** | 15 across auth, posts, friends, users, messages |
+| **Auth** | JWT — signed tokens, 7-day expiry, verified per request |
+| **Real-time** | Socket.io rooms — `user_{id}` targeted delivery |
+| **Data** | Prisma ORM with schema-driven migrations |
+| **Surface** | 15 endpoints — auth, posts, friends, users, messages |
 
-[View Project →](./13-social-media-app) · [README →](./13-social-media-app/README.md)
+[View →](./13-social-media-app) · [README →](./13-social-media-app/README.md)
 
 ---
 
 ### 10 · Members Only
 
-> Express · Passport.js · Nodemailer · bcrypt · PostgreSQL
+`Express` `Passport.js` `Nodemailer` `bcrypt` `PostgreSQL`
 
-Two-tier RBAC system. Unauthenticated users see nothing. Logged-in users request membership. Verified members unlock content.
+Two-tier RBAC system with email-verified membership. Access is enforced by middleware, not route logic.
 
 | | |
 |---|---|
-| **Auth** | Passport.js local strategy + bcrypt |
+| **Auth** | Passport.js local strategy + bcrypt (10 rounds) |
 | **Access Control** | `isLoggedIn` / `isMember` middleware chain |
 | **Email** | Nodemailer SMTP — 6-digit OTP generation and delivery |
-| **DB** | Raw PostgreSQL with parameterized queries |
+| **Data** | Raw PostgreSQL with parameterized queries |
 
-[View Project →](./10-members-only) · [README →](./10-members-only/README.md)
+[View →](./10-members-only) · [README →](./10-members-only/README.md)
 
 ---
 
 ### 08 · Inventory App
 
-> Express · Sequelize · PostgreSQL · EJS Layouts
+`Express` `Sequelize` `PostgreSQL` `EJS`
 
-Full CRUD inventory system with admin-protected delete operations and shared layout templating.
+Full CRUD inventory system. Admin-password gate on destructive operations. Shared EJS layout component.
 
 | | |
 |---|---|
-| **ORM** | Sequelize with sync-based schema management |
-| **Auth** | Admin password gate on destructive routes |
-| **Routing** | RESTful — GET / POST / edit / delete per resource |
-| **UI** | `express-ejs-layouts` for consistent page chrome |
+| **ORM** | Sequelize — model sync, relational data modeling |
+| **Auth** | Password check middleware before DELETE routes |
+| **Routing** | RESTful — create, read, update, delete per resource |
+| **UI** | `express-ejs-layouts` — shared header/footer layout |
 
-[View Project →](./08-inventory-app) · [README →](./08-inventory-app/README.md)
+[View →](./08-inventory-app) · [README →](./08-inventory-app/README.md)
 
 ---
 
@@ -128,54 +146,63 @@ Full CRUD inventory system with admin-protected delete operations and shared lay
 | `POST` | `/api/auth/register` | — | Register — returns `{ user, token }` |
 | `POST` | `/api/auth/login` | — | Login — returns `{ user, token }` |
 | `GET` | `/api/auth/me` | JWT | Current user profile |
-| `GET` | `/api/posts` | JWT | Feed — latest 20 with comments + like count |
+| `GET` | `/api/posts` | JWT | Feed — latest 20 with comments and like count |
 | `POST` | `/api/posts` | JWT | Create post |
 | `POST` | `/api/posts/:id/like` | JWT | Toggle like |
 | `POST` | `/api/posts/:id/comments` | JWT | Add comment |
 | `DELETE` | `/api/posts/:id` | JWT | Delete own post |
 | `POST` | `/api/friends/request` | JWT | Send friend request |
 | `GET` | `/api/friends/requests` | JWT | Pending incoming requests |
-| `POST` | `/api/friends/accept/:id` | JWT | Accept → create Friendship record |
+| `POST` | `/api/friends/accept/:id` | JWT | Accept — creates Friendship record |
 | `GET` | `/api/friends/list` | JWT | Friends list |
 | `GET` | `/api/users` | JWT | All users |
 | `GET` | `/api/messages` | JWT | Direct message thread |
 | `POST` | `/api/messages` | JWT | Send direct message |
 
-**Socket.io:** `join` · `send_message` · `receive_message` · `disconnect`
+**Socket.io events:** `join` · `send_message` · `receive_message` · `disconnect`
 
 ---
 
-## Security Practices
+## Production Readiness
 
-| Practice | Applied In | Detail |
-|----------|-----------|--------|
-| Password hashing | 09, 10, 13 | bcrypt — 10 salt rounds |
-| SQL injection prevention | 07, 09, 10 | Parameterized `pg` queries (`$1`, `$2`) |
-| JWT authentication | 13 | `jsonwebtoken` — signed, 7-day expiry, verified per request |
-| Route protection | 10, 13 | Custom middleware: `isLoggedIn`, `isMember`, `authenticateToken` |
-| Role-based access | 10 | `membership_status` enforced before serving protected content |
-| Input validation | 06, 10, 12 | `express-validator` — sanitization + inline error rendering |
-| Credentials isolation | 08–13 | `.env` via `dotenv` — no hardcoded secrets in application code |
+### Environment Configuration
+
+All credentials isolated via `dotenv`. No hardcoded secrets in application code.
+
+```env
+DATABASE_URL=postgresql://user:pass@host:5432/db
+SESSION_SECRET=your-session-secret
+JWT_SECRET=your-jwt-secret
+PORT=3000
+```
+
+### Security Implementation
+
+| Control | Implementation |
+|---------|---------------|
+| Password hashing | bcrypt — 10 salt rounds |
+| SQL injection | Parameterized queries — `$1`, `$2` via `pg` |
+| Authentication | JWT (signed) · Passport.js session strategy |
+| Route protection | Express middleware: `isLoggedIn`, `isMember`, `authenticateToken` |
+| Input validation | `express-validator` — server-side sanitization before persistence |
+| Secrets isolation | `.env` via `dotenv` — excluded from source control |
+
+### Deployment Characteristics
+
+- Stateless Express application — no server-side session affinity required for JWT projects
+- PostgreSQL as primary data store — compatible with Neon, Supabase, and RDS
+- Socket.io CORS restricted to `CLIENT_URL` env variable — unauthorized origins rejected
+- Each project independently deployable — no monorepo coupling
 
 ---
 
-## Project Index
+## Known Production Gaps
 
-| # | Project | Key Technologies | Concepts |
-|---|---------|-----------------|---------|
-| 01 | [Hello World](./01-hello-world) | Node.js | `http.createServer`, request/response cycle |
-| 02 | [Information Site](./02-basic-information-site) | Node.js | Static routing, `res.sendFile`, 404 handling |
-| 03 | [Hello World Express](./03-hello-world-express) | Express.js | Router abstraction, middleware chain |
-| 04 | [EJS App](./04-express-ejs-app) | Express, EJS | Server-side rendering, `res.render`, dynamic views |
-| 05 | [Message Board](./05-message-board) | Express, EJS | CRUD, in-memory state, Post/Redirect/Get |
-| 06 | [Profile App](./06-profile) | Express, express-validator | MVC, controller layer, inline validation errors |
-| 07 | [Express + PostgreSQL](./07-express-pg-app) | Express, pg | Raw SQL, parameterized queries, `pg.Pool` |
-| 08 | [Inventory App](./08-inventory-app) | Express, Sequelize, PostgreSQL | Sequelize ORM, relational modeling, admin auth |
-| 09 | [Authentication](./09-authentication) | Express, Passport.js, bcrypt | Passport local strategy, session auth, bcrypt |
-| 10 | [Members Only](./10-members-only) | Express, Passport.js, Nodemailer | RBAC, email OTP, middleware guards |
-| 11 | [Prisma Demo](./11-prisma-demo) | Prisma, PostgreSQL | Schema-first ORM, `prisma migrate`, relations |
-| 12 | [File Uploader](./12-file-uploader) | Express, Prisma, Passport.js | File handling, session auth, Prisma client |
-| 13 | [Social Media API](./13-social-media-app) | Express, Socket.io, Prisma, JWT | REST API, WebSockets, JWT, social graph |
+- No automated test suite — unit and integration tests (Jest + Supertest) not yet implemented
+- In-memory session storage — `express-session` requires a Redis adapter for multi-instance deployments
+- No rate limiting on auth endpoints — `/login` and `/register` routes are brute-force vulnerable
+- No centralized error middleware — error handling is currently per-route
+- No CI/CD pipeline — GitHub Actions not configured
 
 ---
 
@@ -185,35 +212,35 @@ Full CRUD inventory system with admin-protected delete operations and shared lay
 git clone https://github.com/sadykovIsmail/node.js.git
 cd node.js/<project-folder>
 npm install
-npm start
+npm start          # or: npm run dev
 ```
 
-Database projects (07–13) require a `.env` file:
-
-```env
-DATABASE_URL=postgresql://user:password@host:5432/dbname
-SESSION_SECRET=your-secret
-PORT=3000
-```
-
-> Each project has its own README with the full schema, env vars, and setup steps.
+> Projects 07–13 require PostgreSQL and a `.env` file. See each project's README for the full schema and environment variable reference.
 
 ---
 
-## Production Roadmap
+## Project Index
 
-- [ ] Automated tests — Jest + Supertest integration suite
-- [ ] Docker — `Dockerfile` + `docker-compose.yml` for portable dev environments
-- [ ] Rate limiting — `express-rate-limit` on all auth endpoints
-- [ ] Centralized error middleware — standardized error shape across all APIs
-- [ ] Structured logging — Morgan (dev) + Winston (production)
-- [ ] Redis sessions — replace in-memory session store
-- [ ] CI/CD — GitHub Actions on push (lint, test, build)
+| # | Project | Stack | Concepts |
+|---|---------|-------|---------|
+| 01 | [Hello World](./01-hello-world) | Node.js | `http.createServer`, request/response cycle |
+| 02 | [Information Site](./02-basic-information-site) | Node.js | Static routing, `res.sendFile`, 404 handling |
+| 03 | [Hello World Express](./03-hello-world-express) | Express.js | Router abstraction, middleware basics |
+| 04 | [EJS App](./04-express-ejs-app) | Express, EJS | Server-side rendering, dynamic views |
+| 05 | [Message Board](./05-message-board) | Express, EJS | CRUD, in-memory state, Post/Redirect/Get |
+| 06 | [Profile App](./06-profile) | Express, express-validator | MVC, controller layer, inline validation |
+| 07 | [Express + PostgreSQL](./07-express-pg-app) | Express, pg | Raw SQL, parameterized queries, `pg.Pool` |
+| 08 | [Inventory App](./08-inventory-app) | Express, Sequelize, PostgreSQL | Sequelize ORM, relational modeling, admin auth |
+| 09 | [Authentication](./09-authentication) | Express, Passport.js, bcrypt | Passport local strategy, bcrypt, sessions |
+| 10 | [Members Only](./10-members-only) | Express, Passport.js, Nodemailer | RBAC, email OTP, middleware guards |
+| 11 | [Prisma Demo](./11-prisma-demo) | Prisma, PostgreSQL | Schema-first ORM, migrations, Prisma Client |
+| 12 | [File Uploader](./12-file-uploader) | Express, Prisma, Passport.js | File handling, session auth, Prisma |
+| 13 | [Social Media API](./13-social-media-app) | Express, Socket.io, Prisma, JWT | REST API, WebSockets, JWT, social graph |
 
 ---
 
 <div align="center">
 
-[MIT License](LICENSE) · [The Odin Project](https://www.theodinproject.com/)
+[MIT License](LICENSE)
 
 </div>
