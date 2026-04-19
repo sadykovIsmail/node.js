@@ -161,6 +161,3 @@ Open your browser at `http://localhost:3000`.
 
 ---
 
-## Part of
-
-[sadykovIsmail/node.js](https://github.com/sadykovIsmail/node.js) — The Odin Project Node.js curriculum
